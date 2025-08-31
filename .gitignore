@@ -97,3 +97,46 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# ----------------------------
+# Python / FastAPI backend
+# ----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage/
+htmlcov/
+.venv/
+venv/
+env/
+*.egg-info/
+*.db
+*.sqlite3
+Backend/api/cortexai_dev.db
+
+# Environment & secrets
+.env
+.env.*
+secrets.*
+
+# ----------------------------
+# Node / React (Vite dashboard)
+# ----------------------------
+node_modules/
+dist/
+build/
+.vite/
+.eslintcache
+.npm/
+
+# ----------------------------
+# Editor & OS miscellany
+# ----------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
