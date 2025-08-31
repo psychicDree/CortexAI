@@ -5,7 +5,7 @@ Scope: End-user mobile/desktop client (Unity), secure backend (Azure), external 
 ```mermaid
 flowchart LR
   %% Trust Boundary: Client Device
-  subgraph TB1[Client Device (Trust Boundary)]
+  subgraph TB1[Client Device - Trust Boundary]
     U[Unity Client App]
     Mic[(Microphone Input)]
     Spk((Speaker Output))
@@ -13,12 +13,12 @@ flowchart LR
   end
 
   %% Trust Boundary: Identity
-  subgraph TB2[Identity & Access]
+  subgraph TB2[Identity and Access]
     B2C[Azure AD B2C (OIDC)]
   end
 
   %% Trust Boundary: Secure Backend (VNet + Private Endpoints)
-  subgraph TB3[Secure Backend (VNet)]
+  subgraph TB3[Secure Backend - VNet]
     APIM[API Management (WAF/Rate Limit)]
     API[App Service API]
     KV[Key Vault]
@@ -36,7 +36,7 @@ flowchart LR
   end
 
   %% Trust Boundary: Analytics / Admin
-  subgraph TB5[Analytics & Admin]
+  subgraph TB5[Analytics and Admin]
     BI[Analytics/Dashboard]
     ADMIN[Admin/Clinical Portal]
   end
