@@ -1,0 +1,14 @@
+{
+  "name": "diagrams",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone Mermaid diagrams project for system architecture visuals",
+  "scripts": {
+    "build": "bash ./render.sh",
+    "clean": "rm -rf out",
+    "lint": "echo 'No linting configured'"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^10.9.1"
+  }
+}

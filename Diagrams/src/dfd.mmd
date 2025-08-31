@@ -1,0 +1,79 @@
+%% Data Flow Diagram (DFD) - System Architecture
+flowchart LR
+  subgraph TB1[Client Device (Trust Boundary)]
+    U[Unity Client App]
+    Mic[(Microphone Input)]
+    Spk((Speaker Output))
+    Cache[(Encrypted Local Cache / Offline Queue)]
+  end
+
+  subgraph TB2[Identity & Access]
+    B2C[Azure AD B2C (OIDC)]
+  end
+
+  subgraph TB3[Secure Backend (VNet)]
+    APIM[API Management (WAF/Rate Limit)]
+    API[App Service API]
+    KV[Key Vault]
+    COS[(Cosmos DB - Telemetry, Pseudonymous IDs)]
+    SQL[(Azure SQL - Consent/PII/Minimal PHI)]
+    BLOB[(Blob Storage - Audio Artifacts)]
+    BUS[(Queue/Service Bus - Ingest/Retry)]
+    LOG[Log Analytics / SIEM]
+  end
+
+  subgraph TB4[External AI Providers]
+    AOAI[Azure OpenAI - LLM]
+    SPEECH[Speech (ASR/TTS) - Azure Speech / ElevenLabs]
+  end
+
+  subgraph TB5[Analytics & Admin]
+    BI[Analytics/Dashboard]
+    ADMIN[Admin/Clinical Portal]
+  end
+
+  Mic -->|audio PCM/Opus| U
+  U -->|1. Login (PII minimal)| B2C
+  B2C -->|2. OIDC/JWT tokens| U
+
+  U -->|3. Telemetry events (pseudonymous)| APIM
+  APIM --> API
+  API -->|write| COS
+  API -->|write| BUS
+
+  U -->|4. Consent/self-reports (PII/PHI)| APIM
+  APIM --> API
+  API -->|write| SQL
+
+  U -->|5. Voice stream (redacted)| APIM
+  APIM --> API
+  API -->|proxied audio/text| SPEECH
+  SPEECH -->|tts/partial asr| API
+  API -->|audio chunks| U
+
+  U -->|6. Companion prompt (no PII)| APIM
+  APIM --> API
+  API -->|context-limited prompt| AOAI
+  AOAI -->|completion| API
+  API -->|response + safety flags| U
+
+  API -->|7. Audio artifacts (if retained)| BLOB
+  API -->|8. Config/feature flags| COS
+  API -->|9. Secrets/keys (read)| KV
+  API -->|10. Audit/metrics| LOG
+
+  ADMIN -->|OIDC| APIM
+  APIM --> API
+  API -->|read (least privilege)| SQL
+  API -->|read (aggregates)| COS
+  COS -->|ETL/Export (de-identified)| BI
+  LOG -->|security alerts| ADMIN
+
+  U <--> Cache
+
+  classDef pii fill:#ffe0e0,stroke:#c00,stroke-width:1px
+  classDef phi fill:#ffe8cc,stroke:#c60,stroke-width:1px
+  classDef pseudo fill:#e0f0ff,stroke:#06c,stroke-width:1px
+  class SQL,BLOB pii
+  class COS pseudo
+
