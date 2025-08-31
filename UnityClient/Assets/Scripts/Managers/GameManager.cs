@@ -12,6 +12,9 @@ namespace CortexAI
         [SerializeField]
         private UIManager uiManager;
 
+        [SerializeField]
+        private OnboardingManager onboardingManager;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -31,6 +34,16 @@ namespace CortexAI
             if (uiManager == null)
             {
                 uiManager = FindObjectOfType<UIManager>();
+            }
+
+            if (onboardingManager == null)
+            {
+                onboardingManager = FindObjectOfType<OnboardingManager>();
+            }
+
+            if (onboardingManager != null)
+            {
+                onboardingManager.StartOnboardingFlow();
             }
         }
 
