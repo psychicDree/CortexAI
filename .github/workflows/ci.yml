@@ -1,0 +1,148 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-api:
+    name: Backend API (FastAPI)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Lint import
+        run: |
+          python -c "import app.main as m; print(m.app.title)"
+      - name: Health check with uvicorn
+        run: |
+          python - <<'PY'
+          import threading, time, urllib.request
+          import uvicorn
+          def run():
+              uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="warning")
+          t = threading.Thread(target=run, daemon=True)
+          t.start()
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8000/health") as r:
+                      print(r.read())
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Health endpoint not responding")
+          PY
+
+  ai-emotion:
+    name: AIEngine Emotion Analysis (FastAPI)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AIEngine/emotion_analysis
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Lint import
+        run: |
+          python -c "import main as m; print(m.app.title)"
+      - name: Health check with uvicorn
+        run: |
+          python - <<'PY'
+          import threading, time, urllib.request
+          import uvicorn
+          def run():
+              uvicorn.run("main:app", host="127.0.0.1", port=8001, log_level="warning")
+          t = threading.Thread(target=run, daemon=True)
+          t.start()
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8001/health") as r:
+                      print(r.read())
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Health endpoint not responding")
+          PY
+
+  ai-recommendation:
+    name: AIEngine Recommendation (FastAPI)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AIEngine/recommendation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Lint import
+        run: |
+          python -c "import main as m; print(m.app.title)"
+      - name: Health check with uvicorn
+        run: |
+          python - <<'PY'
+          import threading, time, urllib.request
+          import uvicorn
+          def run():
+              uvicorn.run("main:app", host="127.0.0.1", port=8002, log_level="warning")
+          t = threading.Thread(target=run, daemon=True)
+          t.start()
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8002/health") as r:
+                      print(r.read())
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Health endpoint not responding")
+          PY
+
+  dashboard:
+    name: Analytics Dashboard (Vite React)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Analytics/dashboard
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: Analytics/dashboard/package.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
