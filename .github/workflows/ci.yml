@@ -141,7 +141,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: Analytics/dashboard/package.json
+          cache-dependency-path: |
+            Analytics/dashboard/package-lock.json
       - name: Install dependencies
         run: npm ci
       - name: Build
