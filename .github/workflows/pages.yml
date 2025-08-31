@@ -6,6 +6,7 @@ on:
     paths:
       - 'Analytics/dashboard/**'
       - '.github/workflows/pages.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
