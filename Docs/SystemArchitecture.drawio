@@ -1,0 +1,226 @@
+<mxfile host="app.diagrams.net" modified="2025-01-27T00:00:00Z" agent="Claude AI Assistant" version="24.7.17" etag="system-arch-1">
+  <diagram id="systemArchitecture" name="System Architecture">
+    <mxGraphModel dx="2000" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="CortexAI System Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1000" y="40" width="400" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Client Layer -->
+        <mxCell id="clientLayer" value="Client Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="120" width="400" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="unityClient" value="Unity Client&#xa;(C# / .NET)&#xa;&#xa;• Voice Input/Output&#xa;• Local Caching&#xa;• Offline Queue&#xa;• UI/UX Components" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="160" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="webDashboard" value="Analytics Dashboard&#xa;(React + TypeScript)&#xa;&#xa;• Data Visualization&#xa;• Admin Interface&#xa;• Reporting Tools" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="160" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- API Gateway Layer -->
+        <mxCell id="gatewayLayer" value="API Gateway Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="600" y="120" width="300" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="apiGateway" value="Azure API Management&#xa;&#xa;• WAF Protection&#xa;• Rate Limiting&#xa;• Request Routing&#xa;• CORS Handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="630" y="160" width="240" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend Services Layer -->
+        <mxCell id="backendLayer" value="Backend Services Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="360" width="800" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mainAPI" value="Main Backend API&#xa;(FastAPI + Python)&#xa;&#xa;• User Management&#xa;• Session Tracking&#xa;• Authentication&#xa;• Data Validation&#xa;• Business Logic" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="400" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="emotionService" value="Emotion Analysis&#xa;(FastAPI + Python)&#xa;&#xa;• Text Processing&#xa;• Emotion Detection&#xa;• Confidence Scoring&#xa;• Keyword Analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="400" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="recommendService" value="Recommendation&#xa;(FastAPI + Python)&#xa;&#xa;• Mood-based Logic&#xa;• Module Selection&#xa;• Level Assignment&#xa;• Personalization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="400" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- AI Services Layer -->
+        <mxCell id="aiLayer" value="External AI Services" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="120" width="300" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="azureOpenAI" value="Azure OpenAI&#xa;&#xa;• LLM Processing&#xa;• Context Analysis&#xa;• Response Generation&#xa;• Safety Filtering" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="160" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="speechServices" value="Speech Services&#xa;&#xa;• ASR (Speech-to-Text)&#xa;• TTS (Text-to-Speech)&#xa;• Audio Processing" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="160" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Data Layer -->
+        <mxCell id="dataLayer" value="Data Storage Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="600" width="800" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="azureSQL" value="Azure SQL Database&#xa;&#xa;• User Data (PII/PHI)&#xa;• Consent Records&#xa;• Session Metadata&#xa;• RBAC Controls" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="640" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cosmosDB" value="Cosmos DB&#xa;&#xa;• Telemetry Events&#xa;• Pseudonymous Data&#xa;• Analytics Aggregates&#xa;• Configuration" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="640" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="blobStorage" value="Blob Storage&#xa;&#xa;• Audio Artifacts&#xa;• File Uploads&#xa;• Temporary Data&#xa;• Backup Storage" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="510" y="640" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="keyVault" value="Azure Key Vault&#xa;&#xa;• API Keys&#xa;• Connection Strings&#xa;• Certificates&#xa;• Secrets Management" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="640" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Identity Layer -->
+        <mxCell id="identityLayer" value="Identity & Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="360" width="300" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="azureB2C" value="Azure AD B2C&#xa;&#xa;• OIDC Authentication&#xa;• User Identity&#xa;• Token Management&#xa;• Social Logins" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="400" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="logAnalytics" value="Log Analytics&#xa;&#xa;• Security Monitoring&#xa;• Audit Trails&#xa;• SIEM Integration&#xa;• Alerting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="400" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Message Queue -->
+        <mxCell id="messageQueue" value="Service Bus / Queue&#xa;&#xa;• Event Processing&#xa;• Retry Logic&#xa;• Async Communication&#xa;• Load Balancing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="600" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Data Warehouse -->
+        <mxCell id="dataWarehouse" value="Data Warehouse&#xa;&#xa;• Analytics Processing&#xa;• Historical Data&#xa;• Reporting Aggregates&#xa;• ETL Pipeline" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="600" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Connections -->
+        <!-- Client to Gateway -->
+        <mxCell id="conn1" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="unityClient" target="apiGateway">
+          <mxGeometry relative="1" as="geometry"/>
+          <mxPoint x="290" y="220" as="sourcePoint"/>
+          <mxPoint x="630" y="200" as="targetPoint"/>
+        </mxCell>
+        <mxCell id="conn1Label" value="HTTPS/REST API" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="180" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Dashboard to Gateway -->
+        <mxCell id="conn2" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="webDashboard" target="apiGateway">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Gateway to Backend -->
+        <mxCell id="conn3" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="apiGateway" target="mainAPI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="conn3Label" value="HTTP/Internal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend to AI Services -->
+        <mxCell id="conn4" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="emotionService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn5" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="recommendService">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend to External AI -->
+        <mxCell id="conn6" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;" edge="1" parent="1" source="mainAPI" target="azureOpenAI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="conn6Label" value="REST API" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="600" y="280" width="80" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn7" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;" edge="1" parent="1" source="mainAPI" target="speechServices">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend to Data -->
+        <mxCell id="conn8" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="azureSQL">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn9" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="cosmosDB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn10" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="blobStorage">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend to Security -->
+        <mxCell id="conn11" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="keyVault">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn12" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="azureB2C">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Analytics connections -->
+        <mxCell id="conn13" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="mainAPI" target="messageQueue">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn14" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="messageQueue" target="dataWarehouse">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="conn15" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1" source="cosmosDB" target="dataWarehouse">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Monitoring -->
+        <mxCell id="conn16" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;" edge="1" parent="1" source="mainAPI" target="logAnalytics">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Technology Stack Legend -->
+        <mxCell id="techStack" value="Technology Stack" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="120" width="300" height="400" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="techDetails" value="Frontend:&#xa;• Unity 2022.3+ (C#)&#xa;• React 18 (TypeScript)&#xa;• Vite Build Tool&#xa;&#xa;Backend:&#xa;• FastAPI (Python 3.8+)&#xa;• SQLAlchemy ORM&#xa;• Pydantic Validation&#xa;• JWT Authentication&#xa;&#xa;Infrastructure:&#xa;• Azure Cloud Platform&#xa;• Docker Containers&#xa;• API Management&#xa;• Virtual Networks&#xa;&#xa;AI/ML:&#xa;• Azure OpenAI GPT&#xa;• Azure Speech Services&#xa;• Custom NLP Models&#xa;&#xa;Data:&#xa;• Azure SQL Database&#xa;• Cosmos DB (NoSQL)&#xa;• Blob Storage&#xa;• Service Bus Queues" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="160" width="260" height="340" as="geometry"/>
+        </mxCell>
+
+        <!-- Deployment Notes -->
+        <mxCell id="deployNotes" value="Deployment Architecture:&#xa;• Containerized microservices&#xa;• Azure App Service hosting&#xa;• Private VNet connectivity&#xa;• Auto-scaling enabled&#xa;• Health check endpoints&#xa;• Blue-green deployment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="560" width="300" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Port Information -->
+        <mxCell id="portInfo" value="Service Ports:&#xa;• Main API: 8000&#xa;• Emotion Analysis: 8001&#xa;• Recommendation: 8002&#xa;• Unity Client: Variable&#xa;• Dashboard: 5173" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="850" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Security Notes -->
+        <mxCell id="securityNotes" value="Security Features:&#xa;• TLS 1.2+ encryption&#xa;• JWT token authentication&#xa;• CORS protection&#xa;• Rate limiting&#xa;• WAF filtering&#xa;• Private endpoints" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="320" y="850" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Data Classification -->
+        <mxCell id="dataClassification" value="Data Classification:&#xa;• PII: Azure SQL (encrypted)&#xa;• PHI: Azure SQL (HIPAA)&#xa;• Pseudonymous: Cosmos DB&#xa;• Audio: Blob (temp)&#xa;• Secrets: Key Vault" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="540" y="850" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

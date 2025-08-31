@@ -1,0 +1,386 @@
+<mxfile host="app.diagrams.net" modified="2025-01-27T00:00:00Z" agent="Claude AI Assistant" version="24.7.17" etag="auth-flow-1">
+  <diagram id="authenticationFlow" name="Authentication Flow">
+    <mxGraphModel dx="2200" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="CortexAI Authentication &amp; Authorization Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="900" y="40" width="600" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Actors -->
+        <mxCell id="user" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="150" width="60" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="unityClient" value="Unity Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="180" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="apiGateway" value="API Gateway&#xa;(Azure APIM)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="180" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="backendAPI" value="Backend API&#xa;(FastAPI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="180" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="azureB2C" value="Azure AD B2C&#xa;(Identity Provider)" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="180" width="140" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="database" value="Azure SQL&#xa;Database" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="180" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Registration Flow -->
+        <mxCell id="regFlowTitle" value="1. User Registration Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="320" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Registration Steps -->
+        <mxCell id="reg1" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="370" as="sourcePoint"/>
+            <mxPoint x="310" y="370" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reg1Label" value="1. Enter email/password" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="170" y="350" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reg2" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="390" as="sourcePoint"/>
+            <mxPoint x="510" y="390" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reg2Label" value="2. POST /auth/register" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="370" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reg3" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="410" as="sourcePoint"/>
+            <mxPoint x="710" y="410" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reg3Label" value="3. Validate &amp; forward" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="390" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reg4" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="430" as="sourcePoint"/>
+            <mxPoint x="1110" y="430" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reg4Label" value="4. Check existing user &amp; create" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="410" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reg5" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1110" y="450" as="sourcePoint"/>
+            <mxPoint x="130" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="reg5Label" value="5. User created successfully" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="570" y="430" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Login Flow -->
+        <mxCell id="loginFlowTitle" value="2. User Login Flow (JWT Authentication)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="520" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Login Steps -->
+        <mxCell id="login1" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="570" as="sourcePoint"/>
+            <mxPoint x="310" y="570" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login1Label" value="1. Enter credentials" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="170" y="550" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="login2" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="590" as="sourcePoint"/>
+            <mxPoint x="510" y="590" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login2Label" value="2. POST /auth/login" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="570" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="login3" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="610" as="sourcePoint"/>
+            <mxPoint x="710" y="610" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login3Label" value="3. Route to auth service" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="590" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="login4" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="630" as="sourcePoint"/>
+            <mxPoint x="1110" y="630" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login4Label" value="4. Verify credentials" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="610" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="login5" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="650" as="sourcePoint"/>
+            <mxPoint x="710" y="680" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login5Label" value="5. Generate JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="660" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="login6" style="endArrow=block;html=1;strokeColor=#0066cc;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="700" as="sourcePoint"/>
+            <mxPoint x="130" y="700" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="login6Label" value="6. Return JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="680" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- OIDC Flow with Azure B2C -->
+        <mxCell id="oidcFlowTitle" value="3. Azure AD B2C OIDC Flow (Alternative/Social Login)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="770" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- OIDC Steps -->
+        <mxCell id="oidc1" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="820" as="sourcePoint"/>
+            <mxPoint x="310" y="820" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc1Label" value="1. Initiate login" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="170" y="800" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oidc2" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="840" as="sourcePoint"/>
+            <mxPoint x="920" y="840" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc2Label" value="2. Redirect to B2C login" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="820" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oidc3" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="860" as="sourcePoint"/>
+            <mxPoint x="920" y="860" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc3Label" value="3. User authenticates (web)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="840" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oidc4" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="920" y="880" as="sourcePoint"/>
+            <mxPoint x="310" y="880" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc4Label" value="4. Authorization code" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="860" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oidc5" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="900" as="sourcePoint"/>
+            <mxPoint x="920" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc5Label" value="5. Exchange code for tokens" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="880" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oidc6" style="endArrow=block;html=1;strokeColor=#cc0000;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="920" y="920" as="sourcePoint"/>
+            <mxPoint x="130" y="920" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oidc6Label" value="6. ID token + access token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="900" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- API Access Flow -->
+        <mxCell id="apiFlowTitle" value="4. Protected API Access Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="980" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- API Access Steps -->
+        <mxCell id="api1" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="1030" as="sourcePoint"/>
+            <mxPoint x="310" y="1030" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api1Label" value="1. API request + JWT" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="170" y="1010" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api2" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="1050" as="sourcePoint"/>
+            <mxPoint x="510" y="1050" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api2Label" value="2. Forward with headers" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1030" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api3" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="1070" as="sourcePoint"/>
+            <mxPoint x="710" y="1070" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api3Label" value="3. Validate JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1050" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api4" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="1090" as="sourcePoint"/>
+            <mxPoint x="710" y="1120" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api4Label" value="4. Extract user context" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1100" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api5" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="1140" as="sourcePoint"/>
+            <mxPoint x="1110" y="1140" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api5Label" value="5. Query user data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="1120" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api6" style="endArrow=block;html=1;strokeColor=#009900;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1110" y="1160" as="sourcePoint"/>
+            <mxPoint x="130" y="1160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="api6Label" value="6. Return authorized data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="570" y="1140" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- JWT Token Details -->
+        <mxCell id="jwtDetails" value="JWT Token Structure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="320" width="400" height="300" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="jwtHeader" value="Header:&#xa;{&#xa;  &quot;alg&quot;: &quot;HS256&quot;,&#xa;  &quot;typ&quot;: &quot;JWT&quot;&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="360" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="jwtPayload" value="Payload:&#xa;{&#xa;  &quot;sub&quot;: &quot;user-id&quot;,&#xa;  &quot;email&quot;: &quot;user@example.com&quot;,&#xa;  &quot;iat&quot;: 1706356800,&#xa;  &quot;exp&quot;: 1706360400,&#xa;  &quot;roles&quot;: [&quot;user&quot;],&#xa;  &quot;permissions&quot;: [&quot;read:sessions&quot;]&#xa;}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="360" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="jwtSignature" value="Signature:&#xa;HMACSHA256(&#xa;  base64UrlEncode(header) + &quot;.&quot; +&#xa;  base64UrlEncode(payload),&#xa;  secret_key_from_key_vault&#xa;)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="460" width="360" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="jwtSecurity" value="Security Features:&#xa;• 60-minute expiration&#xa;• Refresh token rotation&#xa;• Revocation support&#xa;• Rate limiting per user&#xa;• Anomaly detection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="560" width="360" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Error Handling -->
+        <mxCell id="errorHandling" value="Error Handling &amp; Security" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="700" width="400" height="250" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="errorScenarios" value="Authentication Errors:&#xa;• Invalid credentials → 401 Unauthorized&#xa;• Account locked → 423 Locked&#xa;• Token expired → 401 + refresh prompt&#xa;• Invalid token → 401 + re-login&#xa;• Rate limit exceeded → 429 Too Many Requests&#xa;&#xa;Authorization Errors:&#xa;• Insufficient permissions → 403 Forbidden&#xa;• Resource not found → 404 Not Found&#xa;• Account suspended → 403 + contact support&#xa;&#xa;Security Measures:&#xa;• Failed login lockout (5 attempts)&#xa;• IP-based rate limiting&#xa;• Suspicious activity detection&#xa;• Audit logging for all auth events&#xa;• Real-time security alerts" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="740" width="360" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Session Management -->
+        <mxCell id="sessionMgmt" value="Session Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1220" width="500" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sessionDetails" value="Token Lifecycle:&#xa;• Access Token: 60 minutes (short-lived)&#xa;• Refresh Token: 30 days (longer-lived)&#xa;• Silent refresh: 5 minutes before expiry&#xa;• Concurrent session limit: 3 devices&#xa;&#xa;Session Security:&#xa;• Device fingerprinting&#xa;• Geolocation validation&#xa;• Concurrent session monitoring&#xa;• Automatic logout on suspicious activity&#xa;&#xa;Logout Process:&#xa;• Client-initiated logout&#xa;• Server-side token revocation&#xa;• Clear local storage/cache&#xa;• Audit log entry" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="120" y="260" width="460" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Role-Based Access Control -->
+        <mxCell id="rbac" value="Role-Based Access Control (RBAC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1220" width="500" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rbacDetails" value="User Roles:&#xa;• patient: Basic user access to own data&#xa;• therapist: Access to assigned patients&#xa;• admin: System administration access&#xa;• analyst: Read-only analytics access&#xa;&#xa;Permissions:&#xa;• read:own_sessions, write:own_sessions&#xa;• read:patient_data (therapist role)&#xa;• read:all_analytics (admin/analyst)&#xa;• write:system_config (admin only)&#xa;&#xa;Permission Enforcement:&#xa;• Decorator-based authorization&#xa;• Resource-level access control&#xa;• Dynamic permission checking&#xa;• Audit trail for all access" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1260" width="460" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Security Monitoring -->
+        <mxCell id="securityMonitoring" value="Security Monitoring &amp; Compliance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="1000" width="400" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="monitoringDetails" value="Real-time Monitoring:&#xa;• Failed authentication attempts&#xa;• Unusual access patterns&#xa;• Token manipulation attempts&#xa;• Cross-region access anomalies&#xa;&#xa;Compliance Logging:&#xa;• All authentication events&#xa;• Permission changes&#xa;• Data access patterns&#xa;• Administrative actions&#xa;&#xa;Automated Responses:&#xa;• Account lockout on brute force&#xa;• IP blocking for suspicious activity&#xa;• Alert generation for security team&#xa;• Automatic token revocation" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="1040" width="360" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Token Refresh Flow -->
+        <mxCell id="refreshTitle" value="5. Token Refresh Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1460" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="refresh1" style="endArrow=block;html=1;strokeColor=#9900cc;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="1510" as="sourcePoint"/>
+            <mxPoint x="710" y="1510" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="refresh1Label" value="1. Token near expiry (auto-refresh)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1490" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="refresh2" style="endArrow=block;html=1;strokeColor=#9900cc;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="1530" as="sourcePoint"/>
+            <mxPoint x="310" y="1530" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="refresh2Label" value="2. New JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1510" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Implementation Notes -->
+        <mxCell id="implNotes" value="Implementation Notes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="1250" width="400" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="implDetails" value="FastAPI Integration:&#xa;• OAuth2PasswordBearer dependency&#xa;• Custom JWT validation middleware&#xa;• Automatic OpenAPI documentation&#xa;• Exception handling decorators&#xa;&#xa;Unity Client Integration:&#xa;• HTTP client with token management&#xa;• Automatic retry with refresh&#xa;• Secure token storage&#xa;• Offline authentication caching&#xa;&#xa;Azure B2C Configuration:&#xa;• Custom user flows (signup/signin)&#xa;• Social identity providers&#xa;• Multi-factor authentication&#xa;• Password policy enforcement" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="1290" width="360" height="150" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

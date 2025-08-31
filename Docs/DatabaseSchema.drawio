@@ -1,0 +1,235 @@
+<mxfile host="app.diagrams.net" modified="2025-01-27T00:00:00Z" agent="Claude AI Assistant" version="24.7.17" etag="db-schema-1">
+  <diagram id="databaseSchema" name="Database Schema (ERD)">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="CortexAI Database Schema (Entity Relationship Diagram)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="600" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Azure SQL Database Section -->
+        <mxCell id="sqlSection" value="Azure SQL Database (PII/PHI Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="120" width="800" height="500" as="geometry"/>
+        </mxCell>
+
+        <!-- Users Table -->
+        <mxCell id="usersTable" value="users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="150" y="180" width="250" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="usersFields" value="🔑 id: INTEGER (PK, AUTO_INCREMENT)&#xa;📧 email: VARCHAR(255) (UNIQUE, NOT NULL)&#xa;🔒 hashed_password: VARCHAR(255) (NOT NULL)&#xa;📅 created_at: DATETIME (DEFAULT NOW)&#xa;📅 updated_at: DATETIME (ON UPDATE)&#xa;👤 first_name: VARCHAR(100)&#xa;👤 last_name: VARCHAR(100)&#xa;📱 phone_number: VARCHAR(20)&#xa;🎂 date_of_birth: DATE&#xa;⚕️ consent_given: BOOLEAN (DEFAULT FALSE)&#xa;⚕️ consent_date: DATETIME&#xa;🌍 timezone: VARCHAR(50)&#xa;🏥 healthcare_provider_id: VARCHAR(100)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="160" y="210" width="230" height="160" as="geometry"/>
+        </mxCell>
+
+        <!-- Sessions Table -->
+        <mxCell id="sessionsTable" value="sessions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="180" width="280" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sessionsFields" value="🔑 id: INTEGER (PK, AUTO_INCREMENT)&#xa;👤 user_id: INTEGER (FK → users.id, NOT NULL)&#xa;😊 mood: VARCHAR(50)&#xa;📅 started_at: DATETIME (DEFAULT NOW)&#xa;📅 ended_at: DATETIME&#xa;⏱️ duration_seconds: INTEGER (DEFAULT 0)&#xa;🎯 session_type: VARCHAR(50)&#xa;📝 notes: TEXT&#xa;⭐ rating: INTEGER (1-5)&#xa;✅ completed: BOOLEAN (DEFAULT FALSE)&#xa;🏷️ tags: JSON&#xa;📊 metrics: JSON" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="510" y="210" width="260" height="160" as="geometry"/>
+        </mxCell>
+
+        <!-- User Profiles Table -->
+        <mxCell id="profilesTable" value="user_profiles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="150" y="420" width="250" height="160" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="profilesFields" value="🔑 id: INTEGER (PK, AUTO_INCREMENT)&#xa;👤 user_id: INTEGER (FK → users.id, UNIQUE)&#xa;🎯 goals: JSON&#xa;⚕️ conditions: JSON&#xa;💊 medications: JSON&#xa;🚨 emergency_contact: VARCHAR(255)&#xa;👨‍⚕️ therapist_id: VARCHAR(100)&#xa;📊 assessment_data: JSON&#xa;🔒 privacy_settings: JSON" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="160" y="450" width="230" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Session Activities Table -->
+        <mxCell id="activitiesTable" value="session_activities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="420" width="280" height="160" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="activitiesFields" value="🔑 id: INTEGER (PK, AUTO_INCREMENT)&#xa;📋 session_id: INTEGER (FK → sessions.id)&#xa;🎯 activity_type: VARCHAR(100) (NOT NULL)&#xa;📝 activity_data: JSON&#xa;📅 started_at: DATETIME (DEFAULT NOW)&#xa;📅 completed_at: DATETIME&#xa;⏱️ duration_seconds: INTEGER&#xa;📊 outcome_score: DECIMAL(3,2)&#xa;💭 user_feedback: TEXT&#xa;🤖 ai_analysis: JSON" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="510" y="450" width="260" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Cosmos DB Section -->
+        <mxCell id="cosmosSection" value="Cosmos DB (Pseudonymous Analytics Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=18;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="120" width="800" height="500" as="geometry"/>
+        </mxCell>
+
+        <!-- Telemetry Events Collection -->
+        <mxCell id="telemetryCollection" value="telemetry_events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="180" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="telemetryFields" value="🔑 id: STRING (Partition Key)&#xa;📅 timestamp: DATETIME&#xa;🔗 session_id: STRING (pseudonymous)&#xa;👤 user_id_hash: STRING (pseudonymous)&#xa;📱 event_type: STRING&#xa;📊 event_data: OBJECT&#xa;🌍 geo_region: STRING&#xa;📱 device_type: STRING&#xa;🔢 app_version: STRING&#xa;⚡ performance_metrics: OBJECT&#xa;🚨 error_data: OBJECT&#xa;🏷️ tags: ARRAY" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="210" width="280" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Analytics Aggregates Collection -->
+        <mxCell id="analyticsCollection" value="analytics_aggregates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="180" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="analyticsFields" value="🔑 id: STRING (Partition Key)&#xa;📅 date: DATE&#xa;📊 metric_type: STRING&#xa;🔢 metric_value: DECIMAL&#xa;📈 aggregation_level: STRING&#xa;🌍 region: STRING&#xa;👥 user_cohort: STRING&#xa;📱 platform: STRING&#xa;⏰ time_bucket: STRING&#xa;📊 additional_dimensions: OBJECT" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="210" width="280" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Configuration Collection -->
+        <mxCell id="configCollection" value="configuration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="400" width="300" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="configFields" value="🔑 id: STRING (Partition Key)&#xa;🏷️ config_type: STRING&#xa;🔧 config_data: OBJECT&#xa;📅 created_at: DATETIME&#xa;📅 updated_at: DATETIME&#xa;✅ active: BOOLEAN&#xa;🔢 version: INTEGER" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="430" width="280" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Feature Flags Collection -->
+        <mxCell id="featureFlagsCollection" value="feature_flags" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="400" width="300" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="featureFlagsFields" value="🔑 flag_name: STRING (Partition Key)&#xa;✅ enabled: BOOLEAN&#xa;👥 target_users: ARRAY&#xa;🌍 target_regions: ARRAY&#xa;📅 start_date: DATETIME&#xa;📅 end_date: DATETIME&#xa;📊 rollout_percentage: INTEGER" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="430" width="280" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Blob Storage Section -->
+        <mxCell id="blobSection" value="Azure Blob Storage (File Data)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="700" width="600" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Audio Container -->
+        <mxCell id="audioContainer" value="audio-artifacts&#xa;Container&#xa;&#xa;• Voice recordings&#xa;• Audio analysis results&#xa;• Temporary audio files&#xa;• Processing metadata" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="760" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- User Data Container -->
+        <mxCell id="userDataContainer" value="user-data&#xa;Container&#xa;&#xa;• Profile images&#xa;• Document uploads&#xa;• Export files&#xa;• Backup data" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="760" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- System Data Container -->
+        <mxCell id="systemContainer" value="system-data&#xa;Container&#xa;&#xa;• Application logs&#xa;• Error reports&#xa;• Performance data&#xa;• Diagnostic files" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="760" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Key Vault Section -->
+        <mxCell id="keyVaultSection" value="Azure Key Vault (Secrets & Keys)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=18;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="800" y="700" width="400" height="200" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="secretsVault" value="Secrets Vault&#xa;&#xa;🔐 Database connection strings&#xa;🔑 API keys (OpenAI, Speech)&#xa;🔒 JWT signing keys&#xa;📜 SSL certificates&#xa;🔐 Encryption keys&#xa;🔑 Service principal credentials" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="760" width="340" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Future Extensions Section -->
+        <mxCell id="futureSection" value="Future Schema Extensions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontSize=18;fontStyle=1;verticalAlign=top;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="700" width="800" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Future Tables -->
+        <mxCell id="therapistsTable" value="therapists&#xa;&#xa;🔑 id, name, credentials&#xa;📧 email, phone&#xa;🏥 organization&#xa;👥 assigned_users[]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="760" width="140" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="assessmentsTable" value="assessments&#xa;&#xa;🔑 id, user_id&#xa;📋 assessment_type&#xa;📊 responses (JSON)&#xa;📈 scores, results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="760" width="140" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="notificationsTable" value="notifications&#xa;&#xa;🔑 id, user_id&#xa;📱 message, type&#xa;📅 scheduled_at&#xa;✅ delivered_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="760" width="140" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="goalsTable" value="user_goals&#xa;&#xa;🔑 id, user_id&#xa;🎯 goal_type, target&#xa;📊 progress&#xa;📅 deadline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999999;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="760" width="140" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Relationships -->
+        <!-- Users to Sessions (One-to-Many) -->
+        <mxCell id="userSessionRel" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#333333;strokeWidth=2;entryX=0;entryY=0.5;exitX=1;exitY=0.5;" edge="1" parent="1" source="usersTable" target="sessionsTable">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="userSessionLabel" value="1:N&#xa;One user has many sessions" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="260" width="60" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Users to Profiles (One-to-One) -->
+        <mxCell id="userProfileRel" style="endArrow=ERone;startArrow=ERone;html=1;strokeColor=#333333;strokeWidth=2;entryX=0.5;entryY=0;exitX=0.5;exitY=1;" edge="1" parent="1" source="usersTable" target="profilesTable">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="userProfileLabel" value="1:1&#xa;One user has one profile" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="390" width="60" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Sessions to Activities (One-to-Many) -->
+        <mxCell id="sessionActivityRel" style="endArrow=ERmany;startArrow=ERone;html=1;strokeColor=#333333;strokeWidth=2;entryX=0.5;entryY=0;exitX=0.5;exitY=1;" edge="1" parent="1" source="sessionsTable" target="activitiesTable">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="sessionActivityLabel" value="1:N&#xa;One session has many activities" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="680" y="390" width="60" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Data Classification Legend -->
+        <mxCell id="legend" value="Data Classification Legend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="950" width="400" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="piiLegend" value="🔴 PII (Personally Identifiable Information)&#xa;• Names, email, phone, date of birth&#xa;• Stored in Azure SQL with encryption&#xa;• Subject to GDPR/CCPA regulations" style="text;html=1;strokeColor=none;fillColor=#ffe0e0;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="120" y="980" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phiLegend" value="🟡 PHI (Protected Health Information)&#xa;• Medical conditions, medications&#xa;• Therapy notes, assessments&#xa;• HIPAA compliance required" style="text;html=1;strokeColor=none;fillColor=#ffe8cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="980" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pseudoLegend" value="🔵 Pseudonymous Data&#xa;• Hashed user identifiers&#xa;• Aggregated analytics&#xa;• No direct PII linkage" style="text;html=1;strokeColor=none;fillColor=#e0f0ff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1070" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="publicLegend" value="🟢 Public/System Data&#xa;• Configuration settings&#xa;• Feature flags&#xa;• System metadata" style="text;html=1;strokeColor=none;fillColor=#e0ffe0;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1070" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Indexing Strategy -->
+        <mxCell id="indexStrategy" value="Indexing Strategy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="600" y="950" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="indexDetails" value="Primary Indexes:&#xa;• users.email (UNIQUE)&#xa;• sessions.user_id + started_at&#xa;• activities.session_id + started_at&#xa;&#xa;Cosmos DB Partition Keys:&#xa;• telemetry_events: user_id_hash&#xa;• analytics_aggregates: date + region&#xa;• configuration: config_type&#xa;&#xa;Performance Considerations:&#xa;• Composite indexes for queries&#xa;• TTL on temporary data&#xa;• Read replicas for analytics" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="980" width="260" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Data Retention -->
+        <mxCell id="retentionPolicy" value="Data Retention Policies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="950" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="retentionDetails" value="Retention Periods:&#xa;• Audio files: 30 days (auto-delete)&#xa;• Session data: 7 years (compliance)&#xa;• Telemetry: 2 years (analytics)&#xa;• Logs: 90 days (security)&#xa;&#xa;Compliance Features:&#xa;• Right to erasure (GDPR Article 17)&#xa;• Data portability (GDPR Article 20)&#xa;• Cascading deletes&#xa;• Audit trail preservation&#xa;&#xa;Backup Strategy:&#xa;• Daily automated backups&#xa;• Point-in-time recovery&#xa;• Geo-redundant storage" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="980" width="260" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Security Features -->
+        <mxCell id="securityFeatures" value="Security Features" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="950" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="securityDetails" value="Encryption:&#xa;• AES-256 encryption at rest&#xa;• TLS 1.2+ in transit&#xa;• Column-level encryption (PII/PHI)&#xa;&#xa;Access Control:&#xa;• Row-level security (RLS)&#xa;• Role-based access control&#xa;• Just-in-time access&#xa;• API key rotation&#xa;&#xa;Monitoring:&#xa;• Failed login detection&#xa;• Anomaly detection&#xa;• Data access auditing&#xa;• Real-time alerts" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="980" width="260" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Database Connections -->
+        <mxCell id="sqlConn" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=3;dashed=1;" edge="1" parent="1" source="mainAPI" target="azureSQL">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cosmosConn" style="endArrow=block;html=1;strokeColor=#b85450;strokeWidth=3;dashed=1;" edge="1" parent="1" source="mainAPI" target="telemetryCollection">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="blobConn" style="endArrow=block;html=1;strokeColor=#9673a6;strokeWidth=3;dashed=1;" edge="1" parent="1" source="mainAPI" target="audioContainer">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
