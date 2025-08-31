@@ -27,6 +27,8 @@ flowchart LR
     BLOB[(Blob Storage - Audio Artifacts)]
     BUS[(Queue/Service Bus - Ingest/Retry)]
     LOG[Log Analytics / SIEM]
+    EA[Emotion Analysis Service]
+    REC[Recommendation Service]
   end
 
   %% Trust Boundary: External AI Providers
@@ -80,6 +82,12 @@ flowchart LR
   API -->|read (aggregates)| COS
   COS -->|ETL/Export (de-identified)| BI
   LOG -->|security alerts| ADMIN
+
+  %% AIEngine services
+  API -->|analyze text| EA
+  EA -->|emotion + confidence| API
+  API -->|recommend(mood)| REC
+  REC -->|module + level| API
 
   %% Local cache
   U <--> Cache
