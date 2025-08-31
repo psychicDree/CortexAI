@@ -1,0 +1,36 @@
+### CortexAI™ Security Checklist (Audit-Ready)
+
+- **Governance**
+  - Security policy approved and reviewed annually
+  - Roles and responsibilities defined (security owner, incident response)
+- **Access Control**
+  - SSO/OAuth2.0 for operators; MFA enforced
+  - Principle of least privilege for infra, DB, and code repos
+  - Regular access reviews; offboarding within 24h
+- **Application Security**
+  - JWT for API auth; short-lived tokens; refresh flow if needed
+  - Input validation, rate limiting, CORS configured
+  - Secure coding practices and dependency scanning (SCA)
+  - Secrets in vault; never in code or images
+- **Data Protection**
+  - TLS 1.2+ in transit; AES-256 at rest
+  - Pseudonymization/anonymization for analytics
+  - Backups encrypted; periodic restore tests
+- **Logging & Monitoring**
+  - Centralized logs with retention policy
+  - Audit logs for auth, data access, admin actions
+  - Alerting for anomalies and threshold breaches
+- **Infra & Network**
+  - Segmented VPC/VNet; SGs/NSGs least-open
+  - WAF/CDN in front of public endpoints
+  - Regular patching, CIS Benchmarks, vulnerability scans
+- **Privacy & Compliance**
+  - Data processing agreements and BAAs as applicable
+  - DPIAs and threat models for major changes
+- **Incident Response**
+  - Runbooks for P0-P3 incidents
+  - Breach notification procedures per HIPAA/GDPR timelines
+- **Testing**
+  - Unit/integration tests for auth and access controls
+  - Pen tests at least annually; track remediation
+
