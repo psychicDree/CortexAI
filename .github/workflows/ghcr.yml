@@ -7,6 +7,7 @@ on:
       - 'Backend/api/**'
       - 'AIEngine/**'
       - '.github/workflows/ghcr.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
