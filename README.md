@@ -8,58 +8,48 @@ CortexAI is a modular AI platform designed to streamline the development, deploy
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
+### Monorepo layout (key folders)
+- `Backend/api`: FastAPI backend
+- `AIEngine/*`: Microservices
+- `Analytics/dashboard`: Vite/React dashboard
+- `UnityClient`: Unity project
 
-- [Python 3.8+](https://www.python.org/downloads/)
-- [pip](https://pip.pypa.io/en/stable/)
+### Backend API (dev)
+```bash
+cd Backend/api
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
 
-### Installation
+Health check:
+```bash
+curl -s http://localhost:8000/health
+```
 
-1. **Clone the repository**
-    ```bash
-    git clone https://github.com/psychicDree/CortexAI.git
-    cd CortexAI
-    ```
+### Unity client
+- Open `UnityClient` in Unity.
+- Default backend base: `http://localhost:8000`.
+- Override via PlayerPrefs key `cortexai.api_base`.
 
-2. **Install dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## New: User Onboarding
 
-3. **Setup Environment**
-    - Copy `.env.example` to `.env` and fill in the required environment variables.
+Unity creates a local profile and syncs to backend.
 
-4. **Run the Application**
-    ```bash
-    python main.py
-    ```
-    *(Adjust the entry point as needed for your project structure)*
+Backend additions:
+- Model `OnboardingProfile`: `client_user_id`, `display_name`, `age`, `created_at`.
+- Endpoints:
+  - `POST /onboarding/`
+  - `GET /onboarding/{client_user_id}`
 
-## Team Access Structure
+Unity flow:
+- `AuthManager.CreateAndSignIn(name, age)` saves local profile and posts to `/onboarding/` (fire-and-forget).
 
-Different teams have access to different folders within CortexAI to maintain security and workflow clarity:
-
-- **Data Science Team**
-  - Access: `/data`, `/notebooks`, `/models`
-  - Responsibilities: Data preprocessing, exploratory analysis, model development
-
-- **Backend/DevOps Team**
-  - Access: `/api`, `/services`, `/infra`
-  - Responsibilities: API development, service orchestration, deployment scripts
-
-- **Frontend Team**
-  - Access: `/frontend`, `/ui`
-  - Responsibilities: User interface development, user experience enhancements
-
-- **QA/Testing Team**
-  - Access: `/tests`, `/mock_data`
-  - Responsibilities: Automated testing, quality assurance
-
-> _Note: Folder names above are examples. Please update them to match your actual project structure and access policies._
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Quick test:
+```bash
+curl -s -X POST http://localhost:8000/onboarding/ \
+  -H 'Content-Type: application/json' \
+  -d '{"client_user_id":"abc123","display_name":"Test","age":20}'
+```
 
 ## License
 

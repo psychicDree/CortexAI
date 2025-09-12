@@ -27,3 +27,13 @@ class Session(Base):
 
     user = relationship("User", back_populates="sessions")
 
+
+class OnboardingProfile(Base):
+    __tablename__ = "onboarding_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    client_user_id = Column(String, unique=True, index=True, nullable=False)
+    display_name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
