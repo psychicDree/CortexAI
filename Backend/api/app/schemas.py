@@ -40,3 +40,20 @@ class SessionOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+class OnboardingProfileCreate(BaseModel):
+    client_user_id: str = Field(..., min_length=8, max_length=64)
+    display_name: str = Field(..., min_length=1, max_length=120)
+    age: int = Field(0, ge=0, le=120)
+
+
+class OnboardingProfileOut(BaseModel):
+    id: int
+    client_user_id: str
+    display_name: str
+    age: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+

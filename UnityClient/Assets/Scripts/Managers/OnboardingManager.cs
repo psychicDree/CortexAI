@@ -30,6 +30,8 @@ namespace CortexAI
 
             if (authManager.HasExistingUser())
             {
+                // Analytics: existing user resumed
+                Debug.Log("Onboarding: Existing user detected");
                 if (uiManager != null) uiManager.ShowHomeUI();
                 return;
             }
@@ -47,6 +49,7 @@ namespace CortexAI
                     {
                         if (authManager.CreateAndSignIn(name, age))
                         {
+                            Debug.Log("Onboarding: Created profile and posted to backend");
                             onboardingUI.gameObject.SetActive(false);
                             if (uiManager != null) uiManager.ShowHomeUI();
                         }
@@ -58,6 +61,7 @@ namespace CortexAI
                     onExistingUser: () =>
                     {
                         onboardingUI.gameObject.SetActive(false);
+                        Debug.Log("Onboarding: Existing user button clicked");
                         ShowSignIn();
                     }
                 );

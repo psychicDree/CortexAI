@@ -55,6 +55,16 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
   - Purpose: List current user's sessions
   - Response: `[ { ... }, ... ]`
 
+### Onboarding
+- **POST** `/onboarding/`
+  - Purpose: Create or update a lightweight onboarding profile by client-generated ID
+  - Request: `{ "client_user_id": "local-guid", "display_name": "Alice", "age": 22 }`
+  - Response: `{ "id": 1, "client_user_id": "local-guid", "display_name": "Alice", "age": 22, "created_at": "..." }`
+
+- **GET** `/onboarding/{client_user_id}`
+  - Purpose: Fetch onboarding profile by client ID
+  - Response: `{ "id": 1, "client_user_id": "local-guid", "display_name": "Alice", "age": 22, "created_at": "..." }`
+
 Notes:
 - Use HTTPS. Set `Authorization` header with JWT for protected endpoints.
 - Error schema (example): `{ "detail": "message" }`

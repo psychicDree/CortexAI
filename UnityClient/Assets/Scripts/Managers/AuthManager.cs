@@ -28,6 +28,13 @@ namespace CortexAI
             var profile = UserProfile.CreateNew(displayName.Trim(), age);
             StorageService.SaveUserProfile(profile);
             CurrentUser = profile;
+
+            // Fire-and-forget onboarding POST to backend
+            var mb = GetComponent<MonoBehaviour>();
+            if (mb != null)
+            {
+                mb.StartCoroutine(BackendClient.PostOnboarding(profile));
+            }
             return true;
         }
 
