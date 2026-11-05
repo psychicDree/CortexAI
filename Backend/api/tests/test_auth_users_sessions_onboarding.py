@@ -23,11 +23,12 @@ def test_register_and_login(client: TestClient):
     assert data.get("token_type") == "bearer"
 
 
-def test_users_me_and_list(client: TestClient, auth_headers: dict):
+def test_users_me_and_list(client: TestClient, auth_headers: dict, monkeypatch):
     me = client.get("/users/me", headers=auth_headers)
     assert me.status_code == 200
     assert "email" in me.json()
 
+    monkeypatch.setenv("ADMIN_EMAILS", "user@example.com")
     lst = client.get("/users/", headers=auth_headers)
     assert lst.status_code == 200
     assert isinstance(lst.json(), list)
@@ -49,9 +50,12 @@ def test_sessions_crud(client: TestClient, auth_headers: dict):
     assert len(lst.json()) >= 1
 
 
+DEVICE = {"X-Device-Secret": "s" * 64}
+
+
 def test_onboarding_upsert_and_get(client: TestClient):
     payload = {"client_user_id": "abc123456", "display_name": "Alice", "age": 22}
-    res = client.post("/onboarding/", json=payload)
+    res = client.post("/onboarding/", json=payload, headers=DEVICE)
     assert res.status_code == 200, res.text
     data = res.json()
     assert data["client_user_id"] == payload["client_user_id"]
@@ -60,13 +64,13 @@ def test_onboarding_upsert_and_get(client: TestClient):
 
     # Update
     payload_update = {"client_user_id": "abc123456", "display_name": "Alice B", "age": 23}
-    res2 = client.post("/onboarding/", json=payload_update)
+    res2 = client.post("/onboarding/", json=payload_update, headers=DEVICE)
     assert res2.status_code == 200
     data2 = res2.json()
     assert data2["display_name"] == "Alice B"
     assert data2["age"] == 23
 
-    fetched = client.get(f"/onboarding/{payload['client_user_id']}")
+    fetched = client.get(f"/onboarding/{payload['client_user_id']}", headers=DEVICE)
     assert fetched.status_code == 200
     assert fetched.json()["client_user_id"] == payload["client_user_id"]
 

@@ -8,11 +8,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from .config import DEV_JWT_SECRET, admin_emails
 from .database import get_db
 from . import models
 
 
-SECRET_KEY = os.getenv("JWT_SECRET", "dev_secret_change_me")
+SECRET_KEY = os.getenv("JWT_SECRET", DEV_JWT_SECRET)
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
@@ -59,3 +60,9 @@ def get_current_user(
         raise credentials_exception
     return user
 
+
+
+def require_admin(current_user: models.User = Depends(get_current_user)) -> models.User:
+    if current_user.email.lower() not in admin_emails():
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
+    return current_user
