@@ -86,6 +86,7 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
   - Request: `{ "text": "I'm worried about tomorrow", "session_id": 3 }` (`session_id` optional; it must belong to the caller and gets its `mood` set)
   - Response: `{ "id": 1, "session_id": 3, "emotion": "fear", "confidence": 0.9, "crisis_flag": false, "module": "breathwork", "level": "intro", "created_at": "...", "title": "Breathwork", "description": "...", "minutes": 5, "alternatives": ["grounding_exercises", "progressive_muscle_relaxation"], "reply": "..." }`
   - The text is not stored. 404 if the session isn't the caller's; 503 if emotion analysis or recommendation is unreachable. `reply` is `null` if the companion is unavailable.
+  - When crisis language is detected, `emotion` is `crisis` and `confidence` is `0.0`, instead of the model's label, which can be wrong for crisis text. The session's mood is set to `crisis` too.
 
 - **GET** `/checkins/` (Bearer token)
   - Purpose: List the caller's check-ins, newest first
