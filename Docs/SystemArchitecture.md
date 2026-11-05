@@ -125,11 +125,9 @@ All three Python Dockerfiles use `python:3.11-slim`. The emotion image installs 
 - Every question-bank entry is a draft until reviewed, so `/ask/` gives no real answers in production yet.
 - Companion replies are generated and not clinically reviewed. The contact-details filter is a regex and won't catch every format.
 - `llama3.2:3b` on an 8 GB M1 takes about 5–10 s per reply or answer.
-- The onboarding endpoints need no auth, so anyone can read or overwrite a profile if they know its ID.
-- `GET /users/` returns every user to any signed-in user.
-- CORS allows all origins with credentials on every Python service.
-- `JWT_SECRET` falls back to a hardcoded dev value.
-- Login always issues 60-minute tokens; `ACCESS_TOKEN_EXPIRE_MINUTES` is read but not used there.
+- Onboarding profiles created before device secrets existed are claimed by the first secret that updates them.
+- `ADMIN_EMAILS` is a stopgap for real roles.
+- There is no rate limiting on login, registration, or the AI endpoints.
 - No database migrations; schema changes need `create_all` on a fresh database.
 - `sanitizeUserData` writes back to the document that triggers it, so it re-triggers itself. It also writes with `merge: true`, which keeps the existing `isAdmin` field instead of removing it.
 - `UnityClient/` has no `ProjectSettings/`, scenes, or `.meta` files, and the Firebase Unity SDK is not included.

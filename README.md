@@ -40,7 +40,11 @@ Tables are created on startup. Interactive API docs are at `http://localhost:800
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `DATABASE_URL` | `sqlite:///./cortexai_dev.db` | SQLAlchemy URL. For Postgres, also install `psycopg2-binary`. |
-| `JWT_SECRET` | `dev_secret_change_me` | Signs access tokens. Set this outside local dev. |
+| `APP_ENV` | `development` | Any other value (the Docker image uses `production`) requires a strong `JWT_SECRET` |
+| `JWT_SECRET` | `dev_secret_change_me` | Signs access tokens. Outside development the backend refuses to start unless this is set to 32+ random characters. |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `60` | Access token lifetime |
+| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated browser origins allowed to call the API |
+| `ADMIN_EMAILS` | empty | Comma-separated emails allowed to call `GET /users/` |
 | `JWT_ALGORITHM` | `HS256` | Token signing algorithm |
 | `PORT` | `8000` | Only used by `python -m app.main` |
 | `EMOTION_SERVICE_URL` | `http://localhost:8001` | Emotion service used by `/checkins/` |
@@ -65,6 +69,7 @@ curl -s http://localhost:8000/health
 ```bash
 curl -s -X POST http://localhost:8000/onboarding/ \
   -H 'Content-Type: application/json' \
+  -H "X-Device-Secret: $(openssl rand -hex 32)" \
   -d '{"client_user_id":"abc12345","display_name":"Test","age":20}'
 ```
 
@@ -147,7 +152,7 @@ npm run serve
 
 `UnityClient/` holds scripts only. To try it, create a Unity project, copy `UnityClient/Assets` into it, import the Firebase Unity SDK (the `Network/*Sample.cs` scripts need it), and build the scene described in [UnityClient/README.md](UnityClient/README.md).
 
-The client posts onboarding profiles to `http://localhost:8000`. Override that with the PlayerPrefs key `cortexai.api_base`.
+The client posts onboarding profiles to `http://localhost:8000` with its device secret. Override the URL with the PlayerPrefs key `cortexai.api_base`.
 
 ## Docker
 
@@ -155,7 +160,7 @@ Each Python service has a Dockerfile. The emotion image bakes in CPU-only PyTorc
 
 ```bash
 docker build -t cortexai-backend Backend/api
-docker run --rm -p 8000:8000 cortexai-backend
+docker run --rm -p 8000:8000 -e JWT_SECRET="$(openssl rand -hex 32)" cortexai-backend
 ```
 
 ## CI/CD
