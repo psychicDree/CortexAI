@@ -2,14 +2,14 @@
 
 Early-stage prototype of a mental wellbeing app: a Unity client, a FastAPI backend, two AI microservices, a React dashboard, and Firebase scaffolding.
 
-The AI services are placeholders (keyword matching and a fixed lookup table). See [Docs/SystemArchitecture.md](Docs/SystemArchitecture.md) for what is built and what is still planned.
+Emotion analysis runs a local open-source model, so user text stays on your server. Recommendations come from a small rule-based exercise catalog. See [Docs/SystemArchitecture.md](Docs/SystemArchitecture.md) for what is built and what is still planned.
 
 ## Repository layout
 
 | Path | What it is | Port |
 | --- | --- | --- |
-| `Backend/api/` | FastAPI backend: auth, users, sessions, onboarding | 8000 |
-| `AIEngine/emotion_analysis/` | FastAPI service: text → emotion | 8001 |
+| `Backend/api/` | FastAPI backend: auth, users, sessions, onboarding, check-ins | 8000 |
+| `AIEngine/emotion_analysis/` | FastAPI service: text → emotion and crisis flag | 8001 |
 | `AIEngine/recommendation/` | FastAPI service: mood → exercise module | 8002 |
 | `Analytics/dashboard/` | React + Vite dashboard that calls the backend | 5173 |
 | `functions/` | Firebase Cloud Functions (TypeScript, Node 20) | — |
@@ -41,6 +41,9 @@ Tables are created on startup. Interactive API docs are at `http://localhost:800
 | `JWT_SECRET` | `dev_secret_change_me` | Signs access tokens. Set this outside local dev. |
 | `JWT_ALGORITHM` | `HS256` | Token signing algorithm |
 | `PORT` | `8000` | Only used by `python -m app.main` |
+| `EMOTION_SERVICE_URL` | `http://localhost:8001` | Emotion service used by `/checkins/` |
+| `RECOMMENDATION_SERVICE_URL` | `http://localhost:8002` | Recommendation service used by `/checkins/` |
+| `AIENGINE_TIMEOUT_SECONDS` | `10` | Timeout for each AI service call |
 
 Run the tests:
 
@@ -65,11 +68,17 @@ Endpoints are listed in [Docs/API_REFERENCE.md](Docs/API_REFERENCE.md). The auth
 
 ## AI services
 
+The backend's `POST /checkins/` sends the user's text to emotion analysis, then passes the mood to recommendation. Start both services before using it.
+
+Emotion analysis uses [`SamLowe/roberta-base-go_emotions`](https://huggingface.co/SamLowe/roberta-base-go_emotions) (MIT). The first start downloads about 500 MB:
+
 ```bash
 cd AIEngine/emotion_analysis
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8001
+pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-ml.txt
+uvicorn main:app --port 8001
 ```
+
+Without the model dependencies, install `requirements.txt` instead. The service then falls back to a keyword classifier; `GET /health` reports which one is running. Set `EMOTION_BACKEND=lexicon` to force the fallback.
 
 ```bash
 cd AIEngine/recommendation
@@ -89,7 +98,9 @@ curl -s -X POST http://localhost:8002/recommend \
   -d '{"user_id":"abc12345","mood":"fear"}'
 ```
 
-Both services also expose `GET /health`. Nothing in the repo calls them yet.
+Run each service's tests with `pip install -r requirements-dev.txt` and then `pytest`. To also test the real model, set `RUN_MODEL_TESTS=1` in the emotion service.
+
+The crisis flag is a keyword screen, not a clinical assessment.
 
 ## Dashboard
 
@@ -120,7 +131,7 @@ The client posts onboarding profiles to `http://localhost:8000`. Override that w
 
 ## Docker
 
-Each Python service has a Dockerfile:
+Each Python service has a Dockerfile. The emotion image bakes in CPU-only PyTorch and the model, so it runs without network access:
 
 ```bash
 docker build -t cortexai-backend Backend/api
@@ -129,7 +140,7 @@ docker run --rm -p 8000:8000 cortexai-backend
 
 ## CI/CD
 
-- `ci.yml`: on every push and PR, imports and health-checks each Python service, and builds the dashboard.
+- `ci.yml`: on every push and PR, tests, imports, and health-checks each Python service, and builds the dashboard. The emotion job uses the keyword classifier, not the model.
 - `ghcr.yml`: on push to `main`, builds and pushes the three service images to GHCR.
 - `pages.yml`: on push to `main`, deploys the dashboard to GitHub Pages.
 
