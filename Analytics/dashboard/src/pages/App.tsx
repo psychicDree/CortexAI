@@ -37,9 +37,11 @@ const OnboardingPage: React.FC = () => {
 
   async function submit() {
     const payload = { client_user_id: crypto.randomUUID(), display_name: name, age: Number(age) || 0 }
+    // Each profile is owned by a random secret; the backend only stores its hash.
+    const deviceSecret = crypto.randomUUID() + crypto.randomUUID()
     const res = await fetch(`${API_BASE}/onboarding/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Device-Secret': deviceSecret },
       body: JSON.stringify(payload)
     })
     if (!res.ok) {
