@@ -11,6 +11,8 @@ Emotion analysis runs a local open-source model, so user text stays on your serv
 | `Backend/api/` | FastAPI backend: auth, users, sessions, onboarding, check-ins | 8000 |
 | `AIEngine/emotion_analysis/` | FastAPI service: text → emotion and crisis flag | 8001 |
 | `AIEngine/recommendation/` | FastAPI service: mood → exercise module | 8002 |
+| `AIEngine/companion/` | FastAPI service: check-in replies and question answering via local Ollama | 8003 |
+| `AIEngine/training/` | Scripts to export a public dataset, fine-tune, and evaluate the emotion model | — |
 | `Analytics/dashboard/` | React + Vite dashboard that calls the backend | 5173 |
 | `functions/` | Firebase Cloud Functions (TypeScript, Node 20) | — |
 | `UnityClient/` | Unity C# scripts (no Unity project settings or scenes yet) | — |
@@ -43,7 +45,9 @@ Tables are created on startup. Interactive API docs are at `http://localhost:800
 | `PORT` | `8000` | Only used by `python -m app.main` |
 | `EMOTION_SERVICE_URL` | `http://localhost:8001` | Emotion service used by `/checkins/` |
 | `RECOMMENDATION_SERVICE_URL` | `http://localhost:8002` | Recommendation service used by `/checkins/` |
-| `AIENGINE_TIMEOUT_SECONDS` | `10` | Timeout for each AI service call |
+| `AIENGINE_TIMEOUT_SECONDS` | `10` | Timeout for emotion and recommendation calls |
+| `COMPANION_SERVICE_URL` | `http://localhost:8003` | Companion service used by `/checkins/` and `/ask/` |
+| `COMPANION_TIMEOUT_SECONDS` | `60` | Timeout for companion calls (local generation is slower) |
 
 Run the tests:
 
@@ -68,7 +72,7 @@ Endpoints are listed in [Docs/API_REFERENCE.md](Docs/API_REFERENCE.md). The auth
 
 ## AI services
 
-The backend's `POST /checkins/` sends the user's text to emotion analysis, then passes the mood to recommendation. Start both services before using it.
+The backend's `POST /checkins/` sends the user's text to emotion analysis, passes the mood to recommendation, and then asks the companion for a short reply. `POST /ask/` answers questions from the reviewed question bank. Emotion and recommendation are required; if the companion is down, check-ins still work, just without a reply.
 
 Emotion analysis uses [`SamLowe/roberta-base-go_emotions`](https://huggingface.co/SamLowe/roberta-base-go_emotions) (MIT). The first start downloads about 500 MB:
 
@@ -101,6 +105,22 @@ curl -s -X POST http://localhost:8002/recommend \
 Run each service's tests with `pip install -r requirements-dev.txt` and then `pytest`. To also test the real model, set `RUN_MODEL_TESTS=1` in the emotion service.
 
 The crisis flag is a keyword screen, not a clinical assessment.
+
+The companion needs [Ollama](https://ollama.com) running locally:
+
+```bash
+ollama pull llama3.2:3b
+ollama pull nomic-embed-text
+cd AIEngine/companion
+pip install -r requirements.txt
+uvicorn main:app --port 8003
+```
+
+All question-bank entries ship as drafts, and only reviewed entries are used to answer questions. See [AIEngine/companion/README.md](AIEngine/companion/README.md).
+
+### Training
+
+[AIEngine/training](AIEngine/training/README.md) exports GoEmotions as a 5-emotion dataset, fine-tunes the emotion classifier, and evaluates any model exactly as the service runs it. Exported data and weights are git-ignored.
 
 ## Dashboard
 
@@ -141,7 +161,7 @@ docker run --rm -p 8000:8000 cortexai-backend
 ## CI/CD
 
 - `ci.yml`: on every push and PR, tests, imports, and health-checks each Python service, and builds the dashboard. The emotion job uses the keyword classifier, not the model.
-- `ghcr.yml`: on push to `main`, builds and pushes the three service images to GHCR.
+- `ghcr.yml`: on push to `main`, builds and pushes the four service images to GHCR.
 - `pages.yml`: on push to `main`, deploys the dashboard to GitHub Pages.
 
 ## License

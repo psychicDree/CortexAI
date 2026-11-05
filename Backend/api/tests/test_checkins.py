@@ -5,11 +5,14 @@ from conftest import _register_and_login
 
 
 class FakeAIEngine:
-    def __init__(self, emotion="fear", confidence=0.8, crisis_flag=False, fail=False):
+    def __init__(self, emotion="fear", confidence=0.8, crisis_flag=False, fail=False, companion_fail=False):
         self.analysis = {"emotion": emotion, "confidence": confidence, "crisis_flag": crisis_flag}
         self.fail = fail
+        self.companion_fail = companion_fail
         self.texts = []
         self.recommend_calls = []
+        self.reply_calls = []
+        self.ask_calls = []
 
     def analyze(self, text):
         from app.aiengine import AIEngineError
@@ -30,6 +33,22 @@ class FakeAIEngine:
             "minutes": 5,
             "alternatives": ["other"],
         }
+
+    def reply(self, **kwargs):
+        from app.aiengine import AIEngineError
+
+        if self.companion_fail:
+            raise AIEngineError("companion down")
+        self.reply_calls.append(kwargs)
+        return {"reply": "That sounds hard.", "model": "fake"}
+
+    def ask(self, question, crisis_flag):
+        from app.aiengine import AIEngineError
+
+        if self.companion_fail:
+            raise AIEngineError("companion down")
+        self.ask_calls.append((question, crisis_flag))
+        return {"answer": "Breathe slowly.", "sources": [{"id": "breath", "question": "Q", "score": 0.8}], "model": "fake"}
 
 
 @pytest.fixture()
@@ -131,3 +150,56 @@ def test_checkin_validates_text(client: TestClient, use_engine, text):
     headers = _register_and_login(client, "checkin9@example.com", "secret123")
     use_engine(FakeAIEngine())
     assert client.post("/checkins/", json={"text": text}, headers=headers).status_code == 422
+
+
+def test_checkin_includes_companion_reply(client: TestClient, use_engine):
+    headers = _register_and_login(client, "reply1@example.com", "secret123")
+    engine = use_engine(FakeAIEngine(emotion="fear"))
+
+    body = client.post("/checkins/", json={"text": "nervous"}, headers=headers).json()
+    assert body["reply"] == "That sounds hard."
+    assert engine.reply_calls[0]["text"] == "nervous"
+    assert engine.reply_calls[0]["module_title"] == "Title"
+
+
+def test_checkin_succeeds_when_companion_down(client: TestClient, use_engine):
+    headers = _register_and_login(client, "reply2@example.com", "secret123")
+    use_engine(FakeAIEngine(companion_fail=True))
+
+    r = client.post("/checkins/", json={"text": "nervous"}, headers=headers)
+    assert r.status_code == 200
+    assert r.json()["reply"] is None
+    assert len(client.get("/checkins/", headers=headers).json()) == 1
+
+
+def test_ask_requires_auth(client: TestClient):
+    assert client.post("/ask/", json={"question": "hi"}).status_code == 401
+
+
+def test_ask_screens_then_answers(client: TestClient, use_engine):
+    headers = _register_and_login(client, "ask1@example.com", "secret123")
+    engine = use_engine(FakeAIEngine(crisis_flag=False))
+
+    r = client.post("/ask/", json={"question": "How do I calm down?"}, headers=headers)
+    assert r.status_code == 200, r.text
+    assert r.json() == {
+        "answer": "Breathe slowly.",
+        "sources": [{"id": "breath", "question": "Q", "score": 0.8}],
+        "crisis_flag": False,
+    }
+    assert engine.texts == ["How do I calm down?"]
+    assert engine.ask_calls == [("How do I calm down?", False)]
+
+
+def test_ask_passes_crisis_flag(client: TestClient, use_engine):
+    headers = _register_and_login(client, "ask2@example.com", "secret123")
+    engine = use_engine(FakeAIEngine(crisis_flag=True))
+
+    assert client.post("/ask/", json={"question": "..."}, headers=headers).json()["crisis_flag"] is True
+    assert engine.ask_calls == [("...", True)]
+
+
+def test_ask_503_when_companion_down(client: TestClient, use_engine):
+    headers = _register_and_login(client, "ask3@example.com", "secret123")
+    use_engine(FakeAIEngine(companion_fail=True))
+    assert client.post("/ask/", json={"question": "hi"}, headers=headers).status_code == 503

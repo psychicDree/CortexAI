@@ -67,12 +67,25 @@ def create_checkin(
     db.commit()
     db.refresh(record)
 
+    # The companion reply is optional: the check-in still succeeds without it.
+    try:
+        reply = aiengine.reply(
+            text=checkin_in.text,
+            emotion=analysis["emotion"],
+            crisis_flag=analysis["crisis_flag"],
+            module_title=rec["title"],
+            module_description=rec["description"],
+        )["reply"]
+    except (AIEngineError, KeyError):
+        reply = None
+
     return schemas.CheckInResult(
         **schemas.CheckInOut.model_validate(record).model_dump(),
         title=rec["title"],
         description=rec["description"],
         minutes=rec["minutes"],
         alternatives=rec["alternatives"],
+        reply=reply,
     )
 
 

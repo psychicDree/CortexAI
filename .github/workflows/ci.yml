@@ -137,6 +137,68 @@ jobs:
               raise SystemExit("Health endpoint not responding")
           PY
 
+  ai-companion:
+    name: AIEngine Companion (FastAPI)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AIEngine/companion
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Lint import
+        run: |
+          python -c "import main as m; print(m.app.title)"
+      - name: Run tests
+        run: pytest -q
+      - name: Health check with uvicorn
+        run: |
+          python - <<'PY'
+          import threading, time, urllib.request
+          import uvicorn
+          def run():
+              uvicorn.run("main:app", host="127.0.0.1", port=8003, log_level="warning")
+          t = threading.Thread(target=run, daemon=True)
+          t.start()
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8003/health") as r:
+                      print(r.read())
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("Health endpoint not responding")
+          PY
+
+  ai-training:
+    name: AIEngine Training (unit tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AIEngine/training
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Run tests
+        run: pytest -q
+
   dashboard:
     name: Analytics Dashboard (Vite React)
     runs-on: ubuntu-latest

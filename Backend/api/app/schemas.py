@@ -83,3 +83,20 @@ class CheckInResult(CheckInOut):
     description: str
     minutes: int
     alternatives: List[str]
+    reply: Optional[str] = None
+
+
+class AskCreate(BaseModel):
+    question: str = Field(..., min_length=1, max_length=1000)
+
+
+class AskSource(BaseModel):
+    id: str
+    question: str
+    score: float
+
+
+class AskOut(BaseModel):
+    answer: str
+    sources: List[AskSource]
+    crisis_flag: bool

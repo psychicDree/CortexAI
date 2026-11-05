@@ -34,3 +34,5 @@ pip install -r requirements-dev.txt
 pytest
 RUN_MODEL_TESTS=1 pytest -k real_model   # needs requirements-ml.txt
 ```
+
+To serve a model fine-tuned with `AIEngine/training`, set `EMOTION_MODEL` to its directory. See [the training README](../training/README.md) for results; the default model scored best on the GoEmotions test split.

@@ -15,6 +15,8 @@ flowchart LR
     API["Backend API<br/>(FastAPI, :8000)"]
     EA["Emotion analysis<br/>(FastAPI, :8001)"]
     REC["Recommendation<br/>(FastAPI, :8002)"]
+    CMP["Companion<br/>(FastAPI, :8003)"]
+    OL["Ollama<br/>(llama3.2:3b, nomic-embed-text)"]
     DB[("SQLite by default<br/>or DATABASE_URL")]
   end
 
@@ -30,6 +32,8 @@ flowchart LR
   API --> DB
   API -- "POST /analyze" --> EA
   API -- "POST /recommend" --> REC
+  API -- "POST /reply, /ask" --> CMP
+  CMP --> OL
   U -. "sample scripts only" .-> FA
   U -. "sample scripts only" .-> FS
   U -. "sample scripts only" .-> ST
@@ -38,13 +42,15 @@ flowchart LR
   FN --> FS
 ```
 
-Solid arrows are calls the code makes today. Dotted arrows are Firebase sample scripts that nothing calls yet. No client calls `/checkins/` yet.
+Solid arrows are calls the code makes today. Dotted arrows are Firebase sample scripts that nothing calls yet. No client calls `/checkins/` or `/ask/` yet.
 
 | Component | Path | What it does now |
 | --- | --- | --- |
 | Backend API | `Backend/api` | Email/password sign-up and login (JWT), session records, onboarding profiles, check-ins. SQLAlchemy; tables created on startup. |
 | Emotion analysis | `AIEngine/emotion_analysis` | `POST /analyze` runs a local GoEmotions RoBERTa model and groups its 28 labels into `joy`, `sadness`, `anger`, `fear`, `neutral`. Falls back to a keyword classifier if the model can't load. Adds a keyword-based `crisis_flag`. |
 | Recommendation | `AIEngine/recommendation` | `POST /recommend` picks from a 9-module catalog by mood, rotates through modules using history, and raises the level with repeat use. A crisis flag always returns `crisis_support`. |
+| Companion | `AIEngine/companion` | `POST /reply` writes a short supportive reply with a local Ollama model. `POST /ask` answers from reviewed question-bank entries using embedding search. Crisis inputs get fixed text, and output containing contact details is replaced. |
+| Training | `AIEngine/training` | Offline scripts: export GoEmotions as a 5-emotion dataset, fine-tune the classifier, and evaluate any model through the serving code. |
 | Dashboard | `Analytics/dashboard` | Four pages (onboarding, login, users, sessions) that call the backend. Base URL from `VITE_API_BASE`. |
 | Cloud Functions | `functions` | `helloWorld` HTTP function, `onUserCreate` (writes `users/{uid}`), `sanitizeUserData` (Firestore trigger). |
 | Firestore and Storage rules | `firestore.rules`, `storage.rules` | Users can read and write only their own data; `public/` is world-readable. |
@@ -60,6 +66,7 @@ sequenceDiagram
   participant API as Backend API
   participant EA as Emotion analysis
   participant REC as Recommendation
+  participant CMP as Companion
   participant DB as Database
 
   C->>API: POST /checkins/ {text, session_id?} (Bearer token)
@@ -69,10 +76,16 @@ sequenceDiagram
   API->>REC: POST /recommend {mood, confidence, crisis_flag, history}
   REC-->>API: module, level, title, minutes
   API->>DB: insert check-in (no text), set session mood
-  API-->>C: check-in + recommendation
+  API->>CMP: POST /reply {text, emotion, crisis_flag, module}
+  CMP-->>API: reply (optional)
+  API-->>C: check-in + recommendation + reply
 ```
 
-The text goes only to the emotion service on your own infrastructure and is never written to the database. If either service fails, the backend returns 503 and saves nothing.
+The text goes only to the emotion and companion services on your own infrastructure and is never written to the database. If emotion or recommendation fails, the backend returns 503 and saves nothing. If the companion fails, the check-in is saved with `reply: null`.
+
+### Ask
+
+`POST /ask/` screens the question with the emotion service's crisis check, then sends it to the companion. The companion embeds it, finds reviewed entries with cosine similarity of at least 0.58, and asks the model to answer only from those. With no match, it returns a fixed "no answer" message without calling the model. Nothing is stored.
 
 ### Unity onboarding
 
@@ -109,6 +122,9 @@ All three Python Dockerfiles use `python:3.11-slim`. The emotion image installs 
 - Level progression counts how often a module was recommended, not whether the user completed it.
 - No client calls `/checkins/` yet, and the Unity client has no content for the new catalog modules.
 - The AI services have no authentication, so they must stay on a private network.
+- Every question-bank entry is a draft until reviewed, so `/ask/` gives no real answers in production yet.
+- Companion replies are generated and not clinically reviewed. The contact-details filter is a regex and won't catch every format.
+- `llama3.2:3b` on an 8 GB M1 takes about 5–10 s per reply or answer.
 - The onboarding endpoints need no auth, so anyone can read or overwrite a profile if they know its ID.
 - `GET /users/` returns every user to any signed-in user.
 - CORS allows all origins with credentials on every Python service.

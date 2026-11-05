@@ -1,0 +1,190 @@
+# CortexAI question bank.
+#
+# Only entries with `status: reviewed` are used to answer questions, unless the
+# service runs with COMPANION_INCLUDE_DRAFTS=true (local development only).
+# To approve an entry: check it for accuracy and tone, set `status: reviewed`,
+# and add `reviewed_by` and `reviewed_on`.
+#
+# Keep answers general self-care guidance. No diagnosis, medication, statistics,
+# or phone numbers (those vary by country).
+
+- id: app-what-is
+  question: What is CortexAI and what can it help with?
+  answer: >
+    CortexAI is a self-care app. You check in by writing how you feel, and it suggests a short
+    exercise such as breathing, grounding, or journaling. It can support everyday wellbeing, but it
+    is not therapy, does not diagnose anything, and is not a replacement for a doctor or licensed
+    mental health professional.
+  tags: [app]
+  status: draft
+
+- id: app-checkin-privacy
+  question: What happens to what I write in a check-in?
+  answer: >
+    Your check-in text is analyzed to estimate how you feel and pick an exercise. The text itself is
+    not saved. CortexAI keeps the result, such as the detected feeling and the suggested exercise, so
+    it can vary suggestions over time.
+  tags: [app, privacy]
+  status: draft
+
+- id: app-wrong-emotion
+  question: The app guessed my feeling wrong. Why?
+  answer: >
+    The feeling is estimated automatically from your words, and short or mixed messages are hard to
+    read. A guess can be wrong. If it is, you can still do any exercise that feels right to you.
+  tags: [app]
+  status: draft
+
+- id: crisis-help
+  question: What should I do if I am thinking about hurting myself?
+  answer: >
+    Please contact local emergency services or a crisis line now, or reach out to someone you trust
+    and tell them how you feel. If you are in immediate danger, go to the nearest emergency
+    department. You do not have to handle this alone.
+  tags: [safety]
+  status: draft
+
+- id: professional-help-when
+  question: When should I talk to a professional?
+  answer: >
+    Consider talking to a doctor or licensed mental health professional if low mood, worry, or stress
+    lasts for weeks, gets in the way of work, school, sleep, or relationships, or if you are using
+    alcohol or other substances to cope. If you ever think about harming yourself, seek help right
+    away.
+  tags: [safety]
+  status: draft
+
+- id: breathwork-how
+  question: How do I do the breathwork exercise?
+  answer: >
+    Sit or lie comfortably. Breathe in gently through your nose for about four counts, then breathe
+    out slowly for about six counts. Keep it relaxed rather than forced, and repeat for a few
+    minutes. A longer out-breath than in-breath tends to feel calming. Stop if you feel dizzy.
+  tags: [exercise, breathwork, anxiety, anger]
+  status: draft
+
+- id: grounding-how
+  question: What is grounding and how do I do it?
+  answer: >
+    Grounding brings your attention back to the present through your senses. One common version:
+    name five things you can see, four you can touch, three you can hear, two you can smell, and one
+    you can taste. Go slowly and notice details. It can help when thoughts are racing.
+  tags: [exercise, grounding, anxiety]
+  status: draft
+
+- id: muscle-relaxation-how
+  question: How does progressive muscle relaxation work?
+  answer: >
+    Work through your body one muscle group at a time, for example hands, arms, shoulders, face,
+    stomach, legs, and feet. Tense each group gently for about five seconds, then release it and
+    notice the difference for about ten seconds. Skip any area that is injured or painful.
+  tags: [exercise, relaxation, anxiety, sleep]
+  status: draft
+
+- id: mood-journaling-how
+  question: How do I start mood journaling?
+  answer: >
+    Write a few lines about what you feel, what happened just before, and what thoughts came up. You
+    do not need full sentences or good writing. Over time you may notice patterns, such as times of
+    day or situations that affect your mood.
+  tags: [exercise, journaling, sadness]
+  status: draft
+
+- id: gratitude-how
+  question: What is a gratitude practice?
+  answer: >
+    Write down three things that went well today, big or small, and why they happened. Being
+    specific helps, for example "a friend checked in on me" rather than "friends". Doing it regularly
+    can make it easier to notice good moments.
+  tags: [exercise, gratitude, joy]
+  status: draft
+
+- id: savoring-how
+  question: What does savoring mean?
+  answer: >
+    Savoring means staying with a good moment on purpose. Pick a recent positive moment and replay
+    it in detail: where you were, what you saw and heard, and how it felt in your body. Let yourself
+    enjoy it for a minute or two.
+  tags: [exercise, joy]
+  status: draft
+
+- id: self-compassion-how
+  question: How do I do a self-compassion break?
+  answer: >
+    Notice that this moment is hard, and say so to yourself. Remind yourself that struggling is part
+    of being human and that others feel this way too. Then say something kind to yourself, the way
+    you would to a good friend in the same situation.
+  tags: [exercise, self-compassion, sadness, anger]
+  status: draft
+
+- id: gentle-movement-how
+  question: Why does the app suggest gentle movement when I feel low?
+  answer: >
+    When you feel low, it is easy to stop doing things, which can make the low mood stick around.
+    A short walk, a stretch, or stepping outside for a few minutes can shift your energy a little.
+    Keep it small and gentle, and only do what feels safe for your body.
+  tags: [exercise, movement, sadness]
+  status: draft
+
+- id: mindfulness-check-in-how
+  question: What is a mindfulness check-in?
+  answer: >
+    Pause for a minute or two and notice what is here right now: your breath, how your body feels,
+    and what thoughts or feelings are present. You do not need to change anything. Just notice it,
+    without judging it.
+  tags: [exercise, mindfulness]
+  status: draft
+
+- id: stress-quick-relief
+  question: What can I do right now when I feel stressed?
+  answer: >
+    Try slowing your breathing with a longer out-breath, relaxing your shoulders and jaw, or a short
+    grounding exercise using your senses. Stepping away from the situation for a few minutes, if you
+    can, also helps. Then pick one small next step instead of everything at once.
+  tags: [stress, anxiety]
+  status: draft
+
+- id: overthinking
+  question: How can I stop overthinking at night?
+  answer: >
+    Try writing your thoughts down before bed so they are out of your head and on paper, along with
+    one next step for anything you need to deal with. If you are still awake and restless after a
+    while, get up and do something calm in dim light until you feel sleepy.
+  tags: [anxiety, sleep, rumination]
+  status: draft
+
+- id: sleep-basics
+  question: What habits help me sleep better?
+  answer: >
+    Common habits that help: going to bed and waking up at similar times each day, getting daylight
+    in the morning, keeping the bedroom dark and cool, and cutting back on caffeine later in the day
+    and screens right before bed. If sleep problems last for weeks, talk to a doctor.
+  tags: [sleep]
+  status: draft
+
+- id: anger-in-the-moment
+  question: What can I do when I feel really angry?
+  answer: >
+    Give yourself a pause before reacting. Step away if you can, slow your breathing, and notice
+    where you feel the anger in your body. Once you feel calmer, it is easier to decide what you want
+    to say or do. If anger often leads to hurting yourself or others, talk to a professional.
+  tags: [anger]
+  status: draft
+
+- id: loneliness
+  question: What can I do when I feel lonely?
+  answer: >
+    Small steps can help: sending a message to someone you have not talked to in a while, joining a
+    group or class around something you enjoy, or spending time in places with other people around.
+    Being kind to yourself about feeling lonely matters too, since it is a common experience.
+  tags: [sadness, loneliness]
+  status: draft
+
+- id: exercise-not-helping
+  question: The exercise didn't help. What now?
+  answer: >
+    That is okay. Not every exercise works for everyone or every moment. You can try a different one,
+    try again later, or simply rest. If you keep feeling this way, talking to someone you trust or a
+    professional can help.
+  tags: [app, exercise]
+  status: draft

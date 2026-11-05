@@ -8,6 +8,7 @@ from .routers import users as users_router
 from .routers import sessions as sessions_router
 from .routers import onboarding as onboarding_router
 from .routers import checkins as checkins_router
+from .routers import ask as ask_router
 
 
 def create_app() -> FastAPI:
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
     app.include_router(sessions_router.router, prefix="/sessions", tags=["sessions"]) 
     app.include_router(onboarding_router.router, prefix="/onboarding", tags=["onboarding"]) 
     app.include_router(checkins_router.router, prefix="/checkins", tags=["checkins"]) 
+    app.include_router(ask_router.router, prefix="/ask", tags=["ask"]) 
 
     @app.get("/health")
     def health() -> dict:

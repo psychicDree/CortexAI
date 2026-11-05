@@ -1,0 +1,5 @@
+# Exported datasets and trained weights are reproducible; keep them out of git.
+data/
+output/
+reports/*.json
+!reports/.gitkeep

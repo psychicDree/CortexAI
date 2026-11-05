@@ -45,8 +45,9 @@ sequenceDiagram
 | `GET /users/me`, `GET /users/` | Bearer token |
 | `POST /sessions/`, `GET /sessions/` | Bearer token; scoped to the token's user |
 | `POST /checkins/`, `GET /checkins/` | Bearer token; scoped to the token's user |
+| `POST /ask/` | Bearer token |
 | `POST /onboarding/`, `GET /onboarding/{client_user_id}` | None |
-| AI services (`/analyze`, `/recommend`, `/health`) | None |
+| AI services (`/analyze`, `/recommend`, `/reply`, `/ask`, `/health`) | None |
 
 ### Errors
 
