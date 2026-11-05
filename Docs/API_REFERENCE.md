@@ -4,18 +4,21 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
 
 ## Emotion Analysis Service
 - **POST** `/analyze`
-  - Purpose: Analyze text for dominant emotion
-  - Request: `{ "text": "I feel great" }`
-  - Response: `{ "emotion": "joy", "confidence": 0.8 }`
+  - Purpose: Analyze text for dominant emotion and screen for crisis language
+  - Request: `{ "text": "I feel great" }` (1–5000 characters)
+  - Response: `{ "emotion": "joy", "confidence": 0.98, "scores": { "joy": 0.98, "sadness": 0.01, "anger": 0.0, "fear": 0.0, "neutral": 0.01 }, "crisis_flag": false, "model": "SamLowe/roberta-base-go_emotions" }`
+  - `emotion` is one of `joy`, `sadness`, `anger`, `fear`, `neutral`. `model` is `lexicon` when the keyword fallback is running.
   - Example:
     - `curl -X POST $EMO/analyze -H 'Content-Type: application/json' -d '{"text":"I feel great"}'`
-- **GET** `/health` → `{ "status": "ok" }`
+- **GET** `/health` → `{ "status": "ok", "model": "..." }`
 
 ## Recommendation Service
 - **POST** `/recommend`
-  - Purpose: Recommend therapy module/level based on mood
-  - Request: `{ "user_id": "abc123", "mood": "sadness" }`
-  - Response: `{ "module": "mood_journaling", "level": "intro" }`
+  - Purpose: Recommend an exercise module and level based on mood
+  - Request: `{ "user_id": "abc123", "mood": "sadness", "confidence": 0.9, "crisis_flag": false, "history": ["breathwork"] }`
+    - Only `user_id` and `mood` are required. `history` lists previously recommended module IDs, oldest first.
+  - Response: `{ "module": "mood_journaling", "level": "intro", "title": "Mood journaling", "description": "...", "minutes": 10, "reason": "mood_match", "alternatives": ["self_compassion_break", "gentle_movement"] }`
+  - Rules: `crisis_flag: true` always returns `crisis_support`. A confidence below 0.4 is treated as `neutral`. Matching modules rotate by how often they appear in `history`, and the last one isn't repeated. The level goes up after 3 and 8 prior recommendations of the same module.
   - Example:
     - `curl -X POST $REC/recommend -H 'Content-Type: application/json' -d '{"user_id":"abc123","mood":"sadness"}'`
 - **GET** `/health` → `{ "status": "ok" }`
@@ -64,6 +67,17 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
 - **GET** `/onboarding/{client_user_id}`
   - Purpose: Fetch onboarding profile by client ID
   - Response: `{ "id": 1, "client_user_id": "local-guid", "display_name": "Alice", "age": 22, "created_at": "..." }`
+
+### Check-ins
+- **POST** `/checkins/` (Bearer token)
+  - Purpose: Analyze a short text, recommend an exercise, and record the result
+  - Request: `{ "text": "I'm worried about tomorrow", "session_id": 3 }` (`session_id` optional; it must belong to the caller and gets its `mood` set)
+  - Response: `{ "id": 1, "session_id": 3, "emotion": "fear", "confidence": 0.9, "crisis_flag": false, "module": "breathwork", "level": "intro", "created_at": "...", "title": "Breathwork", "description": "...", "minutes": 5, "alternatives": ["grounding_exercises", "progressive_muscle_relaxation"] }`
+  - The text is not stored. 404 if the session isn't the caller's; 503 if an AI service is unreachable.
+
+- **GET** `/checkins/` (Bearer token)
+  - Purpose: List the caller's check-ins, newest first
+  - Response: `[ { "id": 1, "session_id": 3, "emotion": "fear", "confidence": 0.9, "crisis_flag": false, "module": "breathwork", "level": "intro", "created_at": "..." } ]`
 
 Notes:
 - Use HTTPS. Set `Authorization` header with JWT for protected endpoints.

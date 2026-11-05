@@ -1,0 +1,133 @@
+import pytest
+from fastapi.testclient import TestClient
+
+from conftest import _register_and_login
+
+
+class FakeAIEngine:
+    def __init__(self, emotion="fear", confidence=0.8, crisis_flag=False, fail=False):
+        self.analysis = {"emotion": emotion, "confidence": confidence, "crisis_flag": crisis_flag}
+        self.fail = fail
+        self.texts = []
+        self.recommend_calls = []
+
+    def analyze(self, text):
+        from app.aiengine import AIEngineError
+
+        if self.fail:
+            raise AIEngineError("down")
+        self.texts.append(text)
+        return dict(self.analysis)
+
+    def recommend(self, **kwargs):
+        self.recommend_calls.append(kwargs)
+        module = "crisis_support" if kwargs["crisis_flag"] else f"module_{len(self.recommend_calls)}"
+        return {
+            "module": module,
+            "level": "intro",
+            "title": "Title",
+            "description": "Description",
+            "minutes": 5,
+            "alternatives": ["other"],
+        }
+
+
+@pytest.fixture()
+def use_engine(client: TestClient):
+    from app.aiengine import get_aiengine
+
+    def install(engine):
+        client.app.dependency_overrides[get_aiengine] = lambda: engine
+        return engine
+
+    yield install
+    client.app.dependency_overrides.clear()
+
+
+def test_checkin_requires_auth(client: TestClient):
+    assert client.post("/checkins/", json={"text": "hi"}).status_code == 401
+
+
+def test_checkin_runs_pipeline_and_stores_result(client: TestClient, use_engine):
+    headers = _register_and_login(client, "checkin1@example.com", "secret123")
+    engine = use_engine(FakeAIEngine(emotion="fear", confidence=0.8))
+
+    r = client.post("/checkins/", json={"text": "I am worried about tomorrow"}, headers=headers)
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["emotion"] == "fear"
+    assert body["confidence"] == 0.8
+    assert body["module"] == "module_1"
+    assert body["minutes"] == 5
+    assert body["session_id"] is None
+    assert "text" not in body
+
+    assert engine.texts == ["I am worried about tomorrow"]
+    assert engine.recommend_calls[0]["mood"] == "fear"
+    assert engine.recommend_calls[0]["history"] == []
+
+    listed = client.get("/checkins/", headers=headers).json()
+    assert [c["id"] for c in listed] == [body["id"]]
+
+
+def test_history_is_oldest_first_and_per_user(client: TestClient, use_engine):
+    headers = _register_and_login(client, "checkin2@example.com", "secret123")
+    other = _register_and_login(client, "checkin3@example.com", "secret123")
+    engine = use_engine(FakeAIEngine())
+
+    client.post("/checkins/", json={"text": "a"}, headers=other)
+    client.post("/checkins/", json={"text": "b"}, headers=headers)
+    client.post("/checkins/", json={"text": "c"}, headers=headers)
+    client.post("/checkins/", json={"text": "d"}, headers=headers)
+
+    assert engine.recommend_calls[-1]["history"] == ["module_2", "module_3"]
+    assert len(client.get("/checkins/", headers=headers).json()) == 3
+
+
+def test_checkin_sets_session_mood(client: TestClient, use_engine):
+    headers = _register_and_login(client, "checkin4@example.com", "secret123")
+    use_engine(FakeAIEngine(emotion="sadness", confidence=0.7))
+    session = client.post("/sessions/", json={"duration_seconds": 60}, headers=headers).json()
+
+    r = client.post("/checkins/", json={"text": "feeling low", "session_id": session["id"]}, headers=headers)
+    assert r.status_code == 200, r.text
+    assert r.json()["session_id"] == session["id"]
+
+    sessions = client.get("/sessions/", headers=headers).json()
+    assert next(s for s in sessions if s["id"] == session["id"])["mood"] == "sadness"
+
+
+def test_checkin_rejects_other_users_session(client: TestClient, use_engine):
+    owner = _register_and_login(client, "checkin5@example.com", "secret123")
+    intruder = _register_and_login(client, "checkin6@example.com", "secret123")
+    use_engine(FakeAIEngine())
+    session = client.post("/sessions/", json={}, headers=owner).json()
+
+    r = client.post("/checkins/", json={"text": "x", "session_id": session["id"]}, headers=intruder)
+    assert r.status_code == 404
+
+
+def test_checkin_passes_crisis_flag(client: TestClient, use_engine):
+    headers = _register_and_login(client, "checkin7@example.com", "secret123")
+    engine = use_engine(FakeAIEngine(emotion="sadness", crisis_flag=True))
+
+    body = client.post("/checkins/", json={"text": "..."}, headers=headers).json()
+    assert body["crisis_flag"] is True
+    assert body["module"] == "crisis_support"
+    assert engine.recommend_calls[0]["crisis_flag"] is True
+
+
+def test_checkin_returns_503_when_engine_down(client: TestClient, use_engine):
+    headers = _register_and_login(client, "checkin8@example.com", "secret123")
+    use_engine(FakeAIEngine(fail=True))
+
+    r = client.post("/checkins/", json={"text": "hello"}, headers=headers)
+    assert r.status_code == 503
+    assert client.get("/checkins/", headers=headers).json() == []
+
+
+@pytest.mark.parametrize("text", ["", "x" * 5001])
+def test_checkin_validates_text(client: TestClient, use_engine, text):
+    headers = _register_and_login(client, "checkin9@example.com", "secret123")
+    use_engine(FakeAIEngine())
+    assert client.post("/checkins/", json={"text": text}, headers=headers).status_code == 422

@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -37,3 +37,17 @@ class OnboardingProfile(Base):
     age = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+
+
+class CheckIn(Base):
+    __tablename__ = "checkins"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    session_id = Column(Integer, ForeignKey("sessions.id"), nullable=True, index=True)
+    emotion = Column(String, nullable=False)
+    confidence = Column(Float, nullable=False)
+    crisis_flag = Column(Boolean, default=False, nullable=False)
+    module = Column(String, nullable=False)
+    level = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

@@ -1,0 +1,5 @@
+-r requirements.txt
+# Local emotion model. Install CPU-only torch with:
+#   pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-ml.txt
+torch==2.5.1
+transformers==4.46.3
