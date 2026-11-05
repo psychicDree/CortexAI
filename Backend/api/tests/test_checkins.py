@@ -136,6 +136,22 @@ def test_checkin_passes_crisis_flag(client: TestClient, use_engine):
     assert engine.recommend_calls[0]["crisis_flag"] is True
 
 
+def test_crisis_checkin_does_not_record_model_label(client: TestClient, use_engine):
+    # The real model labelled "I want to end my life" as joy; that must not reach mood history.
+    headers = _register_and_login(client, "checkin10@example.com", "secret123")
+    use_engine(FakeAIEngine(emotion="joy", confidence=0.58, crisis_flag=True))
+    session = client.post("/sessions/", json={"mood": "neutral"}, headers=headers).json()
+
+    body = client.post("/checkins/", json={"text": "...", "session_id": session["id"]}, headers=headers).json()
+    assert body["emotion"] == "crisis"
+    assert body["confidence"] == 0.0
+
+    stored = client.get("/checkins/", headers=headers).json()[0]
+    assert (stored["emotion"], stored["confidence"], stored["crisis_flag"]) == ("crisis", 0.0, True)
+    sessions = client.get("/sessions/", headers=headers).json()
+    assert next(s for s in sessions if s["id"] == session["id"])["mood"] == "crisis"
+
+
 def test_checkin_returns_503_when_engine_down(client: TestClient, use_engine):
     headers = _register_and_login(client, "checkin8@example.com", "secret123")
     use_engine(FakeAIEngine(fail=True))

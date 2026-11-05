@@ -12,6 +12,10 @@ router = APIRouter()
 # How many past check-ins feed the recommender's rotation and level logic.
 HISTORY_LIMIT = 50
 
+# Recorded instead of the classifier's label when crisis language is detected:
+# the model can mislabel crisis text (e.g. "joy"), which would skew mood history.
+CRISIS_EMOTION = "crisis"
+
 
 @router.post("/", response_model=schemas.CheckInResult)
 def create_checkin(
@@ -51,19 +55,22 @@ def create_checkin(
     except (AIEngineError, KeyError):
         raise HTTPException(status_code=503, detail="AI engine unavailable")
 
+    crisis = bool(analysis["crisis_flag"])
+    emotion = CRISIS_EMOTION if crisis else analysis["emotion"]
+
     # The raw text is not stored.
     record = models.CheckIn(
         user_id=current_user.id,
         session_id=session.id if session else None,
-        emotion=analysis["emotion"],
-        confidence=analysis["confidence"],
-        crisis_flag=analysis["crisis_flag"],
+        emotion=emotion,
+        confidence=0.0 if crisis else analysis["confidence"],
+        crisis_flag=crisis,
         module=rec["module"],
         level=rec["level"],
     )
     db.add(record)
     if session is not None:
-        session.mood = analysis["emotion"]
+        session.mood = emotion
     db.commit()
     db.refresh(record)
 
