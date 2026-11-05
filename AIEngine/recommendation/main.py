@@ -1,7 +1,6 @@
 from typing import List, Literal
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from engine import recommend as pick_module
@@ -28,14 +27,6 @@ class RecommendResponse(BaseModel):
 
 
 app = FastAPI(title="CortexAI Recommendation Service", version="0.2.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 @app.post("/recommend", response_model=RecommendResponse)

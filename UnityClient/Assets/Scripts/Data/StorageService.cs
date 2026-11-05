@@ -28,7 +28,15 @@ namespace CortexAI
                 if (!PlayerPrefs.HasKey(UserProfileKey)) return null;
                 var json = PlayerPrefs.GetString(UserProfileKey, string.Empty);
                 if (string.IsNullOrEmpty(json)) return null;
-                return JsonUtility.FromJson<UserProfile>(json);
+                var profile = JsonUtility.FromJson<UserProfile>(json);
+
+                // Profiles saved before device secrets existed get one now.
+                if (profile != null && string.IsNullOrEmpty(profile.DeviceSecret))
+                {
+                    profile.DeviceSecret = UserProfile.NewDeviceSecret();
+                    SaveUserProfile(profile);
+                }
+                return profile;
             }
             catch (Exception)
             {

@@ -57,7 +57,7 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
   - Response: `{ "id": 1, "email": "user@example.com" }`
 
 - **GET** `/users/`
-  - Purpose: List users (admin placeholder)
+  - Purpose: List users. Only for emails listed in `ADMIN_EMAILS`; others get 403.
   - Response: `[ { "id": 1, "email": "..." }, ... ]`
 
 ### Sessions
@@ -71,13 +71,15 @@ Note: All responses are JSON. Unless noted, endpoints may require `Authorization
   - Response: `[ { ... }, ... ]`
 
 ### Onboarding
+Both endpoints require an `X-Device-Secret` header: a random value (32–256 characters) that the client creates with the profile and keeps. The backend stores only its SHA-256. A missing or short header returns 401.
+
 - **POST** `/onboarding/`
-  - Purpose: Create or update a lightweight onboarding profile by client-generated ID
+  - Purpose: Create or update a lightweight onboarding profile by client-generated ID. The first secret used for a profile owns it; a different secret returns 403.
   - Request: `{ "client_user_id": "local-guid", "display_name": "Alice", "age": 22 }`
   - Response: `{ "id": 1, "client_user_id": "local-guid", "display_name": "Alice", "age": 22, "created_at": "..." }`
 
 - **GET** `/onboarding/{client_user_id}`
-  - Purpose: Fetch onboarding profile by client ID
+  - Purpose: Fetch onboarding profile by client ID. Returns 404 for an unknown ID or a wrong secret.
   - Response: `{ "id": 1, "client_user_id": "local-guid", "display_name": "Alice", "age": 22, "created_at": "..." }`
 
 ### Check-ins

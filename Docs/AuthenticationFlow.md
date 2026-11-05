@@ -5,7 +5,7 @@ Three identity mechanisms exist in the repo. They are not linked to each other.
 | Mechanism | Used by | Credential | Code |
 | --- | --- | --- | --- |
 | Backend JWT | Dashboard | Email and password | `Backend/api/app/auth.py`, `routers/auth.py` |
-| Onboarding profile | Unity client | Device-generated ID, no secret | `routers/onboarding.py`, `UnityClient/.../AuthManager.cs` |
+| Onboarding profile | Unity client | Device-generated ID and device secret | `routers/onboarding.py`, `UnityClient/.../AuthManager.cs` |
 | Firebase Auth | Sample scripts, `onUserCreate` | Firebase UID | `functions/src/index.ts`, `UnityClient/.../Network/AuthSample.cs` |
 
 ## Backend JWT
@@ -32,9 +32,10 @@ sequenceDiagram
 
 - Passwords: at least 6 characters, hashed with bcrypt through passlib.
 - Login takes OAuth2 password form fields (`application/x-www-form-urlencoded`). The email goes in `username`.
-- Token: HS256 by default, signed with `JWT_SECRET`. Claims are `sub` (the user ID as a string) and `exp` (60 minutes).
+- Token: HS256 by default, signed with `JWT_SECRET`. Claims are `sub` (the user ID as a string) and `exp` (`ACCESS_TOKEN_EXPIRE_MINUTES`, default 60).
+- Outside `APP_ENV=development`, the backend won't start unless `JWT_SECRET` is at least 32 characters and not the dev default.
 - No refresh tokens, logout, or revocation. A token is valid until it expires.
-- No roles. Every signed-in user has the same access.
+- No roles. The only elevated access is `GET /users/`, limited to emails in `ADMIN_EMAILS`.
 
 ### Endpoint access
 
@@ -42,11 +43,12 @@ sequenceDiagram
 | --- | --- |
 | `GET /health` | None |
 | `POST /auth/register`, `POST /auth/login` | None |
-| `GET /users/me`, `GET /users/` | Bearer token |
+| `GET /users/me` | Bearer token |
+| `GET /users/` | Bearer token for an email in `ADMIN_EMAILS` |
 | `POST /sessions/`, `GET /sessions/` | Bearer token; scoped to the token's user |
 | `POST /checkins/`, `GET /checkins/` | Bearer token; scoped to the token's user |
 | `POST /ask/` | Bearer token |
-| `POST /onboarding/`, `GET /onboarding/{client_user_id}` | None |
+| `POST /onboarding/`, `GET /onboarding/{client_user_id}` | `X-Device-Secret` that owns the profile |
 | AI services (`/analyze`, `/recommend`, `/reply`, `/ask`, `/health`) | None |
 
 ### Errors
@@ -74,8 +76,8 @@ sequenceDiagram
   else no profile
     U-->>P: show onboarding form
     P->>U: name, age
-    U->>PP: save profile (new random ID)
-    U--)API: POST /onboarding/ (no wait)
+    U->>PP: save profile (new random ID and device secret)
+    U--)API: POST /onboarding/ with X-Device-Secret (no wait)
     U-->>P: show home
   end
 ```

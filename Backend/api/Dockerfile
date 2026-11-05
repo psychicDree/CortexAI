@@ -1,6 +1,7 @@
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
+    APP_ENV=production \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app

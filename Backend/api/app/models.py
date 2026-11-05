@@ -51,3 +51,14 @@ class CheckIn(Base):
     module = Column(String, nullable=False)
     level = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class OnboardingCredential(Base):
+    """Hash of the device secret that owns an onboarding profile."""
+
+    __tablename__ = "onboarding_credentials"
+
+    id = Column(Integer, primary_key=True, index=True)
+    client_user_id = Column(String, ForeignKey("onboarding_profiles.client_user_id"), unique=True, index=True, nullable=False)
+    secret_hash = Column(String(64), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List, Literal, Optional
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from ollama_client import OllamaClient, OllamaError
@@ -66,14 +65,6 @@ def create_app(ollama: Optional[OllamaClient] = None, bank: Optional[QuestionBan
         yield
 
     app = FastAPI(title="CortexAI Companion Service", version="0.1.0", lifespan=lifespan)
-
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     @app.post("/reply", response_model=ReplyResponse)
     def reply(body: ReplyRequest, request: Request) -> ReplyResponse:

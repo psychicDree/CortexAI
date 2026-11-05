@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
-from ..auth import get_current_user
+from ..auth import get_current_user, require_admin
 from ..database import get_db
 
 
@@ -15,6 +15,6 @@ def get_me(current_user: models.User = Depends(get_current_user)):
 
 
 @router.get("/", response_model=list[schemas.UserOut])
-def list_users(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def list_users(db: Session = Depends(get_db), admin: models.User = Depends(require_admin)):
     return db.query(models.User).all()
 

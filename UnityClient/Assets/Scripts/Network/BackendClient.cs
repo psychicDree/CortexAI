@@ -8,6 +8,7 @@ namespace CortexAI
     public static class BackendClient
     {
         private const string ApiBaseKey = "cortexai.api_base";
+        private const string DeviceSecretHeader = "X-Device-Secret";
 
         public static string GetApiBase()
         {
@@ -35,6 +36,7 @@ namespace CortexAI
                 req.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 req.downloadHandler = new DownloadHandlerBuffer();
                 req.SetRequestHeader("Content-Type", "application/json");
+                req.SetRequestHeader(DeviceSecretHeader, profile.DeviceSecret);
 
                 yield return req.SendWebRequest();
 
