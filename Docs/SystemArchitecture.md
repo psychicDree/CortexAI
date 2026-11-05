@@ -52,8 +52,8 @@ Solid arrows are calls the code makes today. Dotted arrows are Firebase sample s
 | Companion | `AIEngine/companion` | `POST /reply` writes a short supportive reply with a local Ollama model. `POST /ask` answers from reviewed question-bank entries using embedding search. Crisis inputs get fixed text, and output containing contact details is replaced. |
 | Training | `AIEngine/training` | Offline scripts: export GoEmotions as a 5-emotion dataset, fine-tune the classifier, and evaluate any model through the serving code. |
 | Dashboard | `Analytics/dashboard` | Four pages (onboarding, login, users, sessions) that call the backend. Base URL from `VITE_API_BASE`. |
-| Cloud Functions | `functions` | `helloWorld` HTTP function, `onUserCreate` (writes `users/{uid}`), `sanitizeUserData` (Firestore trigger). |
-| Firestore and Storage rules | `firestore.rules`, `storage.rules` | Users can read and write only their own data; `public/` is world-readable. |
+| Cloud Functions | `functions` | `helloWorld` HTTP function, `onUserCreate` (writes `users/{uid}`), `sanitizeUserData` (removes `isAdmin` from `users/{uid}` if one gets there). |
+| Firestore and Storage rules | `firestore.rules`, `storage.rules` | Users can read and write only their own data and can't set `isAdmin` on their user document; `public/` is world-readable. |
 | Unity client | `UnityClient/Assets/Scripts` | Local onboarding and sign-in, session timer, onboarding POST to the backend, Firebase samples. |
 
 ## Request flows
@@ -129,6 +129,5 @@ All three Python Dockerfiles use `python:3.11-slim`. The emotion image installs 
 - `ADMIN_EMAILS` is a stopgap for real roles.
 - There is no rate limiting on login, registration, or the AI endpoints.
 - No database migrations; schema changes need `create_all` on a fresh database.
-- `sanitizeUserData` writes back to the document that triggers it, so it re-triggers itself. It also writes with `merge: true`, which keeps the existing `isAdmin` field instead of removing it.
 - `UnityClient/` has no `ProjectSettings/`, scenes, or `.meta` files, and the Firebase Unity SDK is not included.
-- Compiled `.pyc` files and `functions/lib/` build output are committed.
+- Firebase functions and rules have no automated tests in CI.
