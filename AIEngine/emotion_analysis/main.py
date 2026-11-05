@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from typing import Dict, Literal, Optional
 
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from classifier import DEFAULT_MODEL, DEFAULT_REVISION, Classifier, build_classifier
@@ -33,14 +32,6 @@ def create_app(classifier: Optional[Classifier] = None) -> FastAPI:
         yield
 
     app = FastAPI(title="CortexAI Emotion Analysis Service", version="0.2.0", lifespan=lifespan)
-
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     @app.post("/analyze", response_model=AnalyzeResponse)
     def analyze(body: AnalyzeRequest, request: Request) -> AnalyzeResponse:
