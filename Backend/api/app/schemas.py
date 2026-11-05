@@ -57,3 +57,29 @@ class OnboardingProfileOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+
+class CheckInCreate(BaseModel):
+    text: str = Field(..., min_length=1, max_length=5000)
+    session_id: Optional[int] = None
+
+
+class CheckInOut(BaseModel):
+    id: int
+    session_id: Optional[int] = None
+    emotion: str
+    confidence: float
+    crisis_flag: bool
+    module: str
+    level: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class CheckInResult(CheckInOut):
+    title: str
+    description: str
+    minutes: int
+    alternatives: List[str]
