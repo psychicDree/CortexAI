@@ -1,0 +1,6 @@
+# Install CPU or Apple Silicon torch with:
+#   pip install -r requirements.txt
+# (on Linux CPU-only: add --extra-index-url https://download.pytorch.org/whl/cpu)
+torch==2.5.1
+transformers==4.46.3
+pyarrow==17.0.0
