@@ -63,7 +63,7 @@ erDiagram
 
 | Path | Written by | Fields | Access |
 | --- | --- | --- | --- |
-| `users/{uid}` and subcollections | `onUserCreate`, the client | `uid`, `email`, `createdAt` (server timestamp), plus anything the client adds | Only the signed-in user with that UID |
+| `users/{uid}` and subcollections | `onUserCreate`, the client | `uid`, `email`, `createdAt` (server timestamp), plus anything the client adds | Only the signed-in user with that UID. Clients can't write `isAdmin` on `users/{uid}`, and `sanitizeUserData` removes it if the Admin SDK adds it. |
 | `public/**` | Any signed-in user | Not defined | Read by anyone |
 
 Everything else is denied.

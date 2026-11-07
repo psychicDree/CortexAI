@@ -193,3 +193,6 @@ secrets.*
 *.swo
 .DS_Store
 Thumbs.db
+
+# === FIREBASE FUNCTIONS ===
+functions/lib/
